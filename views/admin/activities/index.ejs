@@ -1,0 +1,51 @@
+<h3 class="mb-3">Aktivitas/Ujian untuk: <%= unit.title %></h3>
+<p class="text-muted">Kelola kuis dan tugas untuk unit ini.</p>
+
+<div class="mb-3">
+  <a href="/admin/modules/<%= unit.module_id %>" class="btn btn-sm btn-outline-secondary">&laquo; Kembali ke Modul</a>
+</div>
+
+<div class="mb-3">
+  <a href="/admin/units/<%= unit.id %>/activities/new?type=QUIZ" class="btn btn-primary me-2">Tambah Kuis</a>
+  <a href="/admin/units/<%= unit.id %>/activities/new?type=TASK" class="btn btn-success">Tambah Tugas</a>
+</div>
+
+<table class="table table-bordered align-middle">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Jenis</th>
+      <th>Judul</th>
+      <th>Jatuh Tempo</th>
+      <th>Skor Maks.</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (activities && activities.length) { %>
+      <% activities.forEach(function(a, idx) { %>
+        <tr>
+          <td><%= idx + 1 %></td>
+          <td><%= a.type %></td>
+          <td><%= a.title %></td>
+          <td><%= a.due_date ? a.due_date.toLocaleString ? a.due_date.toLocaleString() : a.due_date : '-' %></td>
+          <td><%= a.max_score || '-' %></td>
+          <td>
+            <% if (a.type === 'QUIZ') { %>
+              <a href="/admin/activities/<%= a.id %>/questions" class="btn btn-sm btn-outline-primary">Kelola Soal</a>
+            <% } %>
+            <a href="/admin/activities/<%= a.id %>/results" class="btn btn-sm btn-outline-success ms-1">Lihat Hasil</a>
+            <a href="/admin/activities/<%= a.id %>/edit" class="btn btn-sm btn-warning ms-1">Edit</a>
+            <form method="POST" action="/admin/activities/<%= a.id %>?_method=DELETE" class="d-inline ms-1" onsubmit="return confirm('Yakin ingin menghapus aktivitas ini?');">
+              <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="6" class="text-center text-muted">Belum ada aktivitas untuk unit ini.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

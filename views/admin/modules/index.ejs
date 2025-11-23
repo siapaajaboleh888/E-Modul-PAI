@@ -1,0 +1,35 @@
+<h2 class="mb-3">Manajemen Modul</h2>
+<a href="/admin/modules/new" class="btn btn-primary mb-3">Tambah Modul</a>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Judul</th>
+      <th>Deskripsi</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (modules && modules.length) { %>
+      <% modules.forEach(function(m, idx) { %>
+        <tr>
+          <td><%= idx + 1 %></td>
+          <td><%= m.title %></td>
+          <td><%= m.description || '-' %></td>
+          <td class="d-flex gap-1">
+            <a href="/admin/modules/<%= m.id %>" class="btn btn-sm btn-outline-secondary">Detail & Unit</a>
+            <a href="/admin/modules/<%= m.id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+            <form method="POST" action="/admin/modules/<%= m.id %>?_method=DELETE" onsubmit="return confirm('Hapus modul ini beserta unit dan materinya?');">
+              <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="4" class="text-center text-muted">Belum ada modul.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

@@ -1,0 +1,38 @@
+<h3 class="mb-3">Kuis: <%= activity.title %></h3>
+<p class="text-muted">Unit: <%= unit.title %> | Modul: <%= unit.module_title %></p>
+
+<% if (error) { %>
+  <div class="alert alert-warning"><%= error %></div>
+<% } %>
+
+<% if (questions && questions.length) { %>
+  <form method="POST" action="/student/activities/<%= activity.id %>/quiz">
+    <% questions.forEach(function(q, idx) { %>
+      <% const opts = q.options_json ? JSON.parse(q.options_json) : {}; %>
+      <div class="mb-3">
+        <h5>Soal <%= idx + 1 %></h5>
+        <p><%= q.question_text %></p>
+        <div class="ms-3">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="q_<%= q.id %>" id="q<%= q.id %>_A" value="A" />
+            <label class="form-check-label" for="q<%= q.id %>_A">A. <%= opts.A || '-' %></label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="q_<%= q.id %>" id="q<%= q.id %>_B" value="B" />
+            <label class="form-check-label" for="q<%= q.id %>_B">B. <%= opts.B || '-' %></label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="q_<%= q.id %>" id="q<%= q.id %>_C" value="C" />
+            <label class="form-check-label" for="q<%= q.id %>_C">C. <%= opts.C || '-' %></label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="q_<%= q.id %>" id="q<%= q.id %>_D" value="D" />
+            <label class="form-check-label" for="q<%= q.id %>_D">D. <%= opts.D || '-' %></label>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+
+    <button type="submit" class="btn btn-primary">Kirim Jawaban</button>
+  </form>
+<% } %>

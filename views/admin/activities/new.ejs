@@ -1,0 +1,33 @@
+<h3 class="mb-3">Tambah <%= type === 'QUIZ' ? 'Kuis' : 'Tugas' %> untuk: <%= unit.title %></h3>
+
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<form method="POST" action="/admin/units/<%= unit.id %>/activities">
+  <input type="hidden" name="type" value="<%= type %>" />
+
+  <div class="mb-3">
+    <label class="form-label">Judul</label>
+    <input type="text" name="title" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Deskripsi / Instruksi</label>
+    <textarea name="description" class="form-control" rows="4"></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Tanggal Jatuh Tempo</label>
+    <input type="datetime-local" name="due_date" class="form-control" />
+    <div class="form-text">Boleh dikosongkan jika tidak ada batas waktu.</div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Skor Maksimal</label>
+    <input type="number" name="max_score" class="form-control" min="0" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Simpan</button>
+  <a href="/admin/units/<%= unit.id %>/activities" class="btn btn-secondary">Batal</a>
+</form>

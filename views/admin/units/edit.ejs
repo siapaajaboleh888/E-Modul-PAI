@@ -1,0 +1,20 @@
+<h2 class="mb-3">Edit Unit</h2>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+<form method="POST" action="/admin/units/<%= unit.id %>?_method=PUT">
+  <div class="mb-3">
+    <label class="form-label">Judul Unit</label>
+    <input type="text" name="title" class="form-control" value="<%= unit.title %>" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Deskripsi</label>
+    <textarea name="description" class="form-control" rows="3"><%= unit.description || '' %></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Urutan (opsional)</label>
+    <input type="number" name="ordering" class="form-control" value="<%= unit.ordering || '' %>" />
+  </div>
+  <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+  <a href="/admin/modules/<%= unit.module_id %>" class="btn btn-secondary">Batal</a>
+</form>

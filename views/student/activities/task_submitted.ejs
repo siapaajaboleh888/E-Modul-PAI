@@ -1,0 +1,21 @@
+<div class="card mb-3">
+  <div class="card-body">
+    <h3 class="card-title mb-2">Tugas Berhasil Dikirim</h3>
+    <p class="text-muted mb-3">Tugas: <%= activity.title %> | Unit: <%= unit.title %></p>
+
+    <div class="alert alert-success mb-3">
+      Jawaban/refleksi yang kamu tulis sudah tersimpan di sistem dan akan dinilai oleh dosen.
+    </div>
+
+    <p class="mb-2">
+      Untuk sementara, kamu tidak perlu mengirim ulang tugas ini. Jika ada revisi atau umpan balik,
+      dosen akan menyampaikannya melalui kelas atau media komunikasi yang digunakan.
+    </p>
+    <p class="small text-muted mb-0">
+      Progres unit ini sudah ditandai <strong>selesai</strong> di dashboard kamu.
+    </p>
+  </div>
+</div>
+
+<a href="/student/units/<%= unit.id %>/activities" class="btn btn-primary">Kembali ke Daftar Aktivitas</a>
+<a href="/student/dashboard" class="btn btn-outline-secondary ms-2">Kembali ke Dashboard</a>

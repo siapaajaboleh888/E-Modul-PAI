@@ -1,0 +1,37 @@
+body {
+  background-color: #f4f6f9;
+}
+
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Tema warna navbar agar selaras dengan logo E-Modul PAI (hijau keemasan) */
+.navbar.bg-primary {
+  background: linear-gradient(90deg, #0b614e, #148f77);
+}
+
+.navbar .navbar-brand span {
+  font-weight: 600;
+}
+
+.navbar .nav-link {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: #ffffff;
+}
+
+.navbar .navbar-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.navbar .btn-outline-light.btn-sm {
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.navbar .btn-outline-light.btn-sm:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}

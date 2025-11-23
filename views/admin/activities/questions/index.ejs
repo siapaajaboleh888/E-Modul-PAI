@@ -1,0 +1,47 @@
+<h3 class="mb-3">Soal Kuis: <%= activity.title %></h3>
+<p class="text-muted">Unit: <%= unit.title %></p>
+
+<div class="mb-3">
+  <a href="/admin/units/<%= unit.id %>/activities" class="btn btn-sm btn-outline-secondary">&laquo; Kembali ke Aktivitas</a>
+  <a href="/admin/activities/<%= activity.id %>/questions/new" class="btn btn-sm btn-primary ms-2">Tambah Soal</a>
+</div>
+
+<table class="table table-bordered align-middle">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Pertanyaan</th>
+      <th>Opsi</th>
+      <th>Kunci Jawaban</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (questions && questions.length) { %>
+      <% questions.forEach(function(q, idx) { %>
+        <% const opts = q.options_json ? JSON.parse(q.options_json) : {}; %>
+        <tr>
+          <td><%= idx + 1 %></td>
+          <td><%= q.question_text %></td>
+          <td>
+            <div>A. <%= opts.A || '-' %></div>
+            <div>B. <%= opts.B || '-' %></div>
+            <div>C. <%= opts.C || '-' %></div>
+            <div>D. <%= opts.D || '-' %></div>
+          </td>
+          <td><strong><%= q.answer_key %></strong></td>
+          <td>
+            <form method="POST" action="/admin/questions/<%= q.id %>/delete" onsubmit="return confirm('Hapus soal ini?');">
+              <input type="hidden" name="activity_id" value="<%= activity.id %>" />
+              <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="5" class="text-center text-muted">Belum ada soal untuk kuis ini.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

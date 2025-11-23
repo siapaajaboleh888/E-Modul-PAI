@@ -1,0 +1,52 @@
+<h3 class="mb-3">Tambah Soal untuk Kuis: <%= activity.title %></h3>
+<p class="text-muted">Unit: <%= unit.title %></p>
+
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<form method="POST" action="/admin/activities/<%= activity.id %>/questions">
+  <div class="mb-3">
+    <label class="form-label">Pertanyaan</label>
+    <textarea name="question_text" class="form-control" rows="3" required></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Opsi Jawaban</label>
+    <div class="mb-2">
+      <label class="form-label">Opsi A</label>
+      <input type="text" name="optionA" class="form-control" required />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Opsi B</label>
+      <input type="text" name="optionB" class="form-control" required />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Opsi C (opsional)</label>
+      <input type="text" name="optionC" class="form-control" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Opsi D (opsional)</label>
+      <input type="text" name="optionD" class="form-control" />
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Jawaban Benar</label>
+    <select name="answer_key" class="form-select" required>
+      <option value="">-- Pilih Jawaban Benar --</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+      <option value="D">D</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Urutan Soal (opsional)</label>
+    <input type="number" name="ordering" class="form-control" min="0" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Simpan Soal</button>
+  <a href="/admin/activities/<%= activity.id %>/questions" class="btn btn-secondary">Batal</a>
+</form>

@@ -1,0 +1,46 @@
+<h2 class="mb-3">Manajemen Pengguna</h2>
+<a href="/admin/users/new" class="btn btn-primary mb-3">Tambah Pengguna</a>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nama</th>
+      <th>Email</th>
+      <th>Peran</th>
+      <th>Institusi</th>
+      <th>Semester</th>
+      <th>Status</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (users && users.length) { %>
+      <% users.forEach(function(u, idx) { %>
+        <tr>
+          <td><%= idx + 1 %></td>
+          <td><%= u.name %></td>
+          <td><%= u.email %></td>
+          <td><%= u.role %></td>
+          <td><%= u.institution || '-' %></td>
+          <td><%= u.semester || '-' %></td>
+          <td><%= u.status || '-' %></td>
+          <td class="d-flex gap-1">
+            <% if (u.email !== 'admin@emodul-pai.local') { %>
+              <a href="/admin/users/<%= u.id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+              <form method="POST" action="/admin/users/<%= u.id %>?_method=DELETE" onsubmit="return confirm('Hapus pengguna ini?');">
+                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+              </form>
+            <% } else { %>
+              <span class="text-muted small">-</span>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="7" class="text-center text-muted">Belum ada pengguna selain admin.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

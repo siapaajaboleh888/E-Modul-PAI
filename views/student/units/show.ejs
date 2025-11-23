@@ -1,0 +1,32 @@
+<h2 class="mb-1">Unit: <%= unit.title %></h2>
+<p class="text-muted">Modul: <%= unit.module_title %></p>
+
+<div class="mb-3">
+  <a href="/student/modules/<%= unit.module_id %>" class="btn btn-sm btn-outline-secondary">&laquo; Kembali ke Modul</a>
+  <a href="/student/units/<%= unit.id %>/activities" class="btn btn-sm btn-primary ms-2">Lihat Aktivitas/Ujian</a>
+</div>
+
+<h5 class="mt-4">Materi</h5>
+<div class="mb-3">
+  <% if (materials && materials.length) { %>
+    <% materials.forEach(function(mat) { %>
+      <div class="card mb-3 shadow-sm border-0">
+        <div class="card-body">
+          <h6 class="card-title"><%= mat.title %></h6>
+          <% if (mat.content) { %>
+            <div class="card-text small" style="white-space: pre-line; line-height: 1.6;">
+              <%= mat.content %>
+            </div>
+          <% } %>
+          <% if (mat.media_url) { %>
+            <div class="mt-2">
+              <a href="<%= mat.media_url %>" target="_blank" class="small">Lihat media (<%= mat.media_type || 'link' %>)</a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <div class="alert alert-secondary">Belum ada materi untuk unit ini.</div>
+  <% } %>
+</div>

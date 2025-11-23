@@ -1,0 +1,163 @@
+<% const modules = dashboard.modules || []; %>
+<% const progress = dashboard.progress || []; %>
+<% const totalModules = modules.length; %>
+<% const finishedUnits = progress.filter(p => (p.completion_percentage || 0) >= 100).length; %>
+<% const inProgressUnits = progress.filter(p => (p.completion_percentage || 0) > 0 && (p.completion_percentage || 0) < 100).length; %>
+
+<h2 class="mb-3">Dashboard Mahasiswa</h2>
+<p>Halo, <strong><%= currentUser ? currentUser.name : 'Mahasiswa' %></strong>. Selamat datang di E-Modul Interaktif PAI.</p>
+
+<!-- Kartu ringkasan seperti panel warna di contoh dashboard -->
+<div class="row mb-4">
+  <div class="col-md-4 mb-3">
+    <div class="card text-bg-primary h-100">
+      <div class="card-body">
+        <h5 class="card-title">Total Modul</h5>
+        <p class="card-text display-6"><%= totalModules %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card text-bg-success h-100">
+      <div class="card-body">
+        <h5 class="card-title">Unit Selesai</h5>
+        <p class="card-text display-6"><%= finishedUnits %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card text-bg-info h-100">
+      <div class="card-body">
+        <h5 class="card-title">Unit Sedang Dikerjakan</h5>
+        <p class="card-text display-6"><%= inProgressUnits %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Menu utama mahasiswa -->
+<div class="row mb-4">
+  <!-- Dashboard (aktif sekarang) -->
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100 text-bg-light">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-1">Dashboard</h5>
+        <p class="card-text small mb-3">Ringkasan progres belajar, modul yang tersedia, dan informasi singkat akun Anda.</p>
+        <button class="btn btn-sm btn-secondary mt-auto" type="button" disabled>Halaman Aktif</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modul Pembelajaran -->
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-1">Modul Pembelajaran</h5>
+        <p class="card-text small mb-3">Daftar seluruh modul dan unit PAI. Akses materi, video, dan aktivitas per unit.</p>
+        <a href="/student/modules" class="btn btn-sm btn-primary mt-auto">Buka Modul</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skenario PBL -->
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-1">Skenario PBL</h5>
+        <p class="card-text small mb-3">Daftar skenario masalah autentik dengan area input solusi dan refleksi nilai.</p>
+        <a href="/student/pbl" class="btn btn-sm btn-outline-secondary mt-auto">Lihat Penjelasan</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <!-- Aktivitas Interaktif -->
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-1">Aktivitas Interaktif</h5>
+        <p class="card-text small mb-3">Kuis formatif dan tugas akan tersedia di setiap unit sebagai latihan nilai dan konsep.</p>
+        <a href="/student/activities/overview" class="btn btn-sm btn-outline-secondary mt-auto">Cara Mengakses</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progres Belajar -->
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-1">Progres Belajar</h5>
+        <p class="card-text small mb-2">Lihat ringkasan unit yang sudah selesai, skor kuis, dan perkembangan belajar Anda.</p>
+        <div class="mt-auto">
+          <a href="#progres-detail" class="btn btn-sm btn-outline-primary">Lihat Detail Progres</a>
+          <a href="/student/competency-map" class="btn btn-sm btn-link text-decoration-none">Peta Kompetensi</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Glosarium -->
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-1">Glosarium</h5>
+        <p class="card-text small mb-3">Daftar istilah kunci PAI dan penjelasan singkatnya sebagai referensi cepat.</p>
+        <a href="/student/glossary" class="btn btn-sm btn-outline-secondary mt-auto">Buka Glosarium</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <!-- Pengaturan / Profil -->
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-1">Pengaturan / Profil</h5>
+        <p class="card-text small mb-3">Kelola informasi akun dan keamanan login Anda.</p>
+        <a href="/student/profile" class="btn btn-sm btn-outline-secondary mt-auto">Lihat Profil</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="progres-detail" class="row">
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-header">Modul Tersedia</div>
+      <ul class="list-group list-group-flush">
+        <% if (modules.length) { %>
+          <% modules.slice(0, 5).forEach(function(m) { %>
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div>
+                <strong><%= m.title %></strong><br />
+                <span class="text-muted small"><%= m.description || '' %></span>
+              </div>
+              <a href="/student/modules/<%= m.id %>" class="btn btn-sm btn-outline-primary">Buka</a>
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li class="list-group-item text-muted">Belum ada modul.</li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-header">Progres Unit</div>
+      <ul class="list-group list-group-flush">
+        <% if (progress.length) { %>
+          <% progress.forEach(function(p) { %>
+            <li class="list-group-item">
+              Unit ID: <%= p.unit_id %> &mdash; <%= p.status || 'Belum mulai' %> &mdash;
+              <%= p.completion_percentage || 0 %>%
+            </li>
+          <% }) %>
+        <% } else { %>
+          <li class="list-group-item text-muted">Belum ada progres tercatat.</li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</div>

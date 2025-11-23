@@ -1,0 +1,17 @@
+<h2 class="mb-3">Tambah Unit untuk Modul: <%= module.title %></h2>
+<form method="POST" action="/admin/modules/<%= module.id %>/units">
+  <div class="mb-3">
+    <label class="form-label">Judul Unit</label>
+    <input type="text" name="title" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Deskripsi</label>
+    <textarea name="description" class="form-control" rows="3"></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Urutan (opsional)</label>
+    <input type="number" name="ordering" class="form-control" />
+  </div>
+  <button type="submit" class="btn btn-primary">Simpan</button>
+  <a href="/admin/modules/<%= module.id %>" class="btn btn-secondary">Batal</a>
+</form>

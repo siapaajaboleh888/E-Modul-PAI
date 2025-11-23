@@ -1,0 +1,21 @@
+<h2 class="mb-3">Tambah Materi untuk Unit: <%= unit.title %></h2>
+<form method="POST" action="/admin/units/<%= unit.id %>/materials">
+  <div class="mb-3">
+    <label class="form-label">Judul Materi</label>
+    <input type="text" name="title" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Konten Teks</label>
+    <textarea name="content" class="form-control" rows="5" placeholder="Teks materi, bisa berisi penjelasan PAI, ayat, hadis, dsb."></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Tipe Media (opsional)</label>
+    <input type="text" name="media_type" class="form-control" placeholder="contoh: video, audio, image" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">URL Media (opsional)</label>
+    <input type="url" name="media_url" class="form-control" placeholder="Link ke video/audio/gambar" />
+  </div>
+  <button type="submit" class="btn btn-primary">Simpan</button>
+  <a href="/admin/modules/<%= unit.module_id %>" class="btn btn-secondary">Batal</a>
+</form>

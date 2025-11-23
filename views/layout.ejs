@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title : 'E-Modul Interaktif PAI' %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <img src="/img/emodul pai.jpg" alt="Logo E-Modul PAI" class="me-2" style="height:32px; width:auto;" />
+        <span>E-Modul PAI</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <% if (currentUser && currentUser.role === 'STUDENT') { %>
+            <li class="nav-item"><a class="nav-link" href="/student/dashboard">Dashboard</a></li>
+          <% } %>
+          <% if (currentUser && currentUser.role === 'LECTURER') { %>
+            <li class="nav-item"><a class="nav-link" href="/lecturer/dashboard">Dashboard</a></li>
+          <% } %>
+          <% if (currentUser && currentUser.role === 'ADMIN') { %>
+            <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
+          <% } %>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <% if (currentUser) { %>
+            <% let roleLabel = 'Pengguna'; %>
+            <% if (currentUser.role === 'STUDENT') { roleLabel = 'Mahasiswa'; } %>
+            <% if (currentUser.role === 'LECTURER') { roleLabel = 'Dosen'; } %>
+            <% if (currentUser.role === 'ADMIN') { roleLabel = 'Admin'; } %>
+            <li class="nav-item"><span class="navbar-text me-3">Halo, <%= currentUser.name %> (<%= roleLabel %>)</span></li>
+            <li class="nav-item">
+              <form method="POST" action="/logout">
+                <button class="btn btn-outline-light btn-sm" type="submit">Logout</button>
+              </form>
+            </li>
+          <% } else { %>
+            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mb-5">
+    <%- body %>
+  </main>
+
+  <footer class="bg-light border-top py-3 mt-auto">
+    <div class="container small text-muted d-flex flex-column flex-md-row justify-content-between">
+      <div>
+        &copy; <%= new Date().getFullYear() %> E-Modul Interaktif PAI &mdash; Pembelajaran PAI di Perguruan Tinggi.
+      </div>
+      <div>
+        <span>Kampus berkarakter: intelektual, spiritual, dan sosial yang berkeadaban.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<h2 class="mb-3">Edit Modul</h2>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+<form method="POST" action="/admin/modules/<%= module.id %>?_method=PUT">
+  <div class="mb-3">
+    <label class="form-label">Judul Modul</label>
+    <input type="text" name="title" class="form-control" value="<%= module.title %>" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Deskripsi</label>
+    <textarea name="description" class="form-control" rows="3"><%= module.description || '' %></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Capaian Pembelajaran (Learning Outcomes)</label>
+    <textarea name="learning_outcomes" class="form-control" rows="3"><%= module.learning_outcomes || '' %></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Urutan (opsional)</label>
+    <input type="number" name="ordering" class="form-control" value="<%= module.ordering || '' %>" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Status</label>
+    <select name="is_active" class="form-select">
+      <option value="1" <%= module.is_active ? 'selected' : '' %>>Aktif</option>
+      <option value="0" <%= !module.is_active ? 'selected' : '' %>>Tidak Aktif</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+  <a href="/admin/modules" class="btn btn-secondary">Batal</a>
+</form>

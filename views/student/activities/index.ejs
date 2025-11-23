@@ -1,0 +1,52 @@
+<h3 class="mb-3">Aktivitas untuk Unit: <%= unit.title %></h3>
+<p class="text-muted">Modul: <%= unit.module_title %></p>
+
+<div class="mb-3">
+  <a href="/student/modules/<%= unit.module_id %>" class="btn btn-sm btn-outline-secondary">&laquo; Kembali ke Modul</a>
+</div>
+
+<table class="table table-bordered align-middle">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Jenis</th>
+      <th>Judul</th>
+      <th>Jatuh Tempo</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (activities && activities.length) { %>
+      <% activities.forEach(function(a, idx) { %>
+        <tr>
+          <td><%= idx + 1 %></td>
+          <td><%= a.type %></td>
+          <td><%= a.title %></td>
+          <td><%= a.due_date || '-' %></td>
+          <td>
+            <% const alreadyDone = doneMap && doneMap[a.id]; %>
+            <% if (a.type === 'QUIZ') { %>
+              <% if (alreadyDone) { %>
+                <button class="btn btn-sm btn-outline-secondary" disabled>Sudah dikerjakan</button>
+              <% } else { %>
+                <a href="/student/activities/<%= a.id %>/quiz" class="btn btn-sm btn-primary">Kerjakan Kuis</a>
+              <% } %>
+            <% } else if (a.type === 'TASK') { %>
+              <% if (alreadyDone) { %>
+                <button class="btn btn-sm btn-outline-secondary" disabled>Sudah dikumpulkan</button>
+              <% } else { %>
+                <a href="/student/activities/<%= a.id %>/task" class="btn btn-sm btn-success">Kerjakan Tugas</a>
+              <% } %>
+            <% } else { %>
+              <span class="text-muted">Jenis aktivitas lain</span>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="5" class="text-center text-muted">Belum ada aktivitas untuk unit ini.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

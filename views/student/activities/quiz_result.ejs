@@ -1,0 +1,11 @@
+<h3 class="mb-3">Hasil Kuis: <%= activity.title %></h3>
+<p class="text-muted">Unit: <%= unit.title %> | Modul: <%= unit.module_title %></p>
+
+<div class="alert alert-info">
+  <p>Total soal: <strong><%= total %></strong></p>
+  <p>Benar: <strong><%= correct %></strong></p>
+  <p>Skor: <strong><%= score %></strong></p>
+</div>
+
+<a href="/student/units/<%= unit.id %>/activities" class="btn btn-primary">Kembali ke Daftar Aktivitas</a>
+<a href="/student/dashboard" class="btn btn-outline-secondary ms-2">Kembali ke Dashboard</a>

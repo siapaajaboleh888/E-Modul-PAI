@@ -1,0 +1,32 @@
+<h3 class="mb-3">Edit Aktivitas: <%= activity.title %></h3>
+<p class="text-muted">Unit: <%= unit.title %></p>
+
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<form method="POST" action="/admin/activities/<%= activity.id %>?_method=PUT">
+  <div class="mb-3">
+    <label class="form-label">Judul</label>
+    <input type="text" name="title" class="form-control" value="<%= activity.title %>" required />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Deskripsi / Instruksi</label>
+    <textarea name="description" class="form-control" rows="4"><%= activity.description || '' %></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Tanggal Jatuh Tempo</label>
+    <input type="datetime-local" name="due_date" class="form-control" value="" />
+    <div class="form-text">Untuk saat ini, nilai tanggal tidak dipre-populate secara otomatis.</div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Skor Maksimal</label>
+    <input type="number" name="max_score" class="form-control" min="0" value="<%= activity.max_score || '' %>" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+  <a href="/admin/units/<%= unit.id %>/activities" class="btn btn-secondary">Batal</a>
+</form>

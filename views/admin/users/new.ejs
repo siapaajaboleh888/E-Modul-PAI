@@ -1,0 +1,52 @@
+<h2 class="mb-3">Tambah Pengguna Baru</h2>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+<form method="POST" action="/admin/users">
+  <div class="mb-3">
+    <label class="form-label">Nama Lengkap</label>
+    <input type="text" name="name" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    <div class="input-group">
+      <input type="password" name="password" id="newUserPassword" class="form-control" required />
+      <button type="button" class="btn btn-outline-secondary" id="toggleNewUserPassword">👁</button>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Peran</label>
+    <select name="role" class="form-select" required>
+      <option value="STUDENT">Mahasiswa</option>
+      <option value="LECTURER">Dosen</option>
+      <option value="ADMIN">Admin</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Institusi (opsional)</label>
+    <input type="text" name="institution" class="form-control" placeholder="Nama PTU" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Semester (opsional)</label>
+    <input type="text" name="semester" class="form-control" placeholder="contoh: 1, 2, 3" />
+  </div>
+  <button type="submit" class="btn btn-primary">Simpan</button>
+  <a href="/admin/users" class="btn btn-secondary">Batal</a>
+</form>
+
+<script>
+  (function () {
+    const input = document.getElementById('newUserPassword');
+    const btn = document.getElementById('toggleNewUserPassword');
+    if (input && btn) {
+      btn.addEventListener('click', function () {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+      });
+    }
+  })();
+</script>

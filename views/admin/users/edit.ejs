@@ -1,0 +1,39 @@
+<h2 class="mb-3">Edit Pengguna</h2>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+<form method="POST" action="/admin/users/<%= user.id %>?_method=PUT">
+  <div class="mb-3">
+    <label class="form-label">Nama Lengkap</label>
+    <input type="text" name="name" class="form-control" value="<%= user.name %>" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" value="<%= user.email %>" required />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Peran</label>
+    <select name="role" class="form-select" required>
+      <option value="STUDENT" <%= user.role === 'STUDENT' ? 'selected' : '' %>>Mahasiswa</option>
+      <option value="LECTURER" <%= user.role === 'LECTURER' ? 'selected' : '' %>>Dosen</option>
+      <option value="ADMIN" <%= user.role === 'ADMIN' ? 'selected' : '' %>>Admin</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Institusi (opsional)</label>
+    <input type="text" name="institution" class="form-control" value="<%= user.institution || '' %>" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Semester (opsional)</label>
+    <input type="text" name="semester" class="form-control" value="<%= user.semester || '' %>" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Status</label>
+    <select name="status" class="form-select" required>
+      <option value="ACTIVE" <%= user.status === 'ACTIVE' ? 'selected' : '' %>>ACTIVE</option>
+      <option value="INACTIVE" <%= user.status === 'INACTIVE' ? 'selected' : '' %>>INACTIVE</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+  <a href="/admin/users" class="btn btn-secondary">Batal</a>
+</form>

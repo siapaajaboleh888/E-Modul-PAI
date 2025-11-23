@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h3 class="card-title mb-1">Tugas Refleksi</h3>
+        <p class="text-muted mb-2">
+          <strong><%= activity.title %></strong><br>
+          Unit: <%= unit.title %> | Modul: <%= unit.module_title %>
+        </p>
+
+        <% if (error) { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <div class="mb-3">
+          <h5 class="fw-semibold mb-2">Tujuan Tugas</h5>
+          <p class="mb-2">
+            Melalui tugas ini, kamu diminta untuk merefleksikan kembali materi yang sudah kamu pelajari dalam unit ini
+            dan mengaitkannya dengan pengalamanmu sehari-hari, terutama dalam menggunakan media dan teknologi digital
+            secara beretika sesuai nilai-nilai PAI.
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <h5 class="fw-semibold mb-2">Instruksi Tugas</h5>
+          <p class="mb-1">
+            <%= activity.description || 'Bacalah kembali ringkasan materi pada unit ini, lalu buatlah refleksi pribadi tentang bagaimana nilai-nilai yang dipelajari dapat kamu terapkan dalam kehidupan digitalmu.' %>
+          </p>
+          <ul class="mb-1">
+            <li>Tuliskan refleksi dalam bentuk narasi/cerita, minimal 3–4 paragraf.</li>
+            <li>Sertakan contoh konkret dari pengalaman penggunaan media sosial, chat, atau aktivitas digital lain.</li>
+            <li>Jelaskan nilai-nilai keislaman yang relevan (misalnya: kejujuran, tanggung jawab, tabayyun, tidak menyebar hoaks, menghargai orang lain).</li>
+            <li>Akhiri dengan komitmen pribadi: perubahan sikap atau tindakan apa yang ingin kamu lakukan setelah mempelajari materi ini.</li>
+          </ul>
+          <p class="small text-muted mb-0">
+            Jawaban yang kamu tulis akan dibaca dan dinilai oleh dosen. Tugas yang sudah dikirim tidak bisa diubah lagi,
+            jadi pastikan kamu sudah membaca kembali tulisanmu sebelum menekan tombol "Kirim Tugas".
+          </p>
+        </div>
+
+        <form method="POST" action="/student/activities/<%= activity.id %>/task">
+          <div class="mb-3">
+            <label class="form-label">Jawaban / Refleksi Pribadi</label>
+            <textarea
+              name="answer_text"
+              class="form-control"
+              rows="8"
+              required
+              placeholder="Tuliskan refleksi pribadimu di sini. Ceritakan pengalamanmu, nilai-nilai yang kamu pelajari, dan komitmenmu ke depan."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-success">Kirim Tugas Refleksi</button>
+          <a href="/student/units/<%= unit.id %>/activities" class="btn btn-outline-secondary ms-2">Kembali ke Daftar Aktivitas</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card border-info mb-3">
+      <div class="card-header bg-info text-white">Tips Menulis Refleksi yang Baik</div>
+      <div class="card-body small">
+        <ul class="mb-2">
+          <li>Jujur pada diri sendiri, tuliskan pengalaman yang benar-benar kamu alami.</li>
+          <li>Gunakan bahasa yang santun dan mudah dipahami.</li>
+          <li>Hubungkan antara teori/materi dengan praktik di dunia nyata.</li>
+          <li>Sertakan ayat, hadis, atau nilai keislaman bila memungkinkan.</li>
+        </ul>
+        <p class="mb-0 text-muted">Tulisanmu tidak harus sempurna, yang terpenting adalah kejujuran dan kesungguhan refleksi.</p>
+      </div>
+    </div>
+  </div>
+</div>
