@@ -65,7 +65,10 @@ router.post('/register', async (req, res) => {
     return res.redirect('/login');
   } catch (err) {
     console.error(err);
-    return res.render('auth/register', { error: 'Terjadi kesalahan pada sistem.' });
+    return res.render('auth/register', { 
+    error: 'Terjadi kesalahan pada sistem.',
+    form
+  });
   }
 });
 
