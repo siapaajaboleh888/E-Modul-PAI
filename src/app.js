@@ -19,6 +19,7 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(expressLayouts);
 
+
 app.use(
   session({
     store: new SQLiteStore({ db: 'sessions.sqlite', dir: path.join(__dirname, '..', 'db') }),
@@ -28,6 +29,12 @@ app.use(
     cookie: { maxAge: 1000 * 60 * 60 }
   })
 );
+
+app.use((req, res, next) => {
+  res.locals.form = {};  // default supaya tidak undefined
+  next();
+});
+
 
 // Simple middleware for user role injection to views
 app.use((req, res, next) => {
