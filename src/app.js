@@ -7,6 +7,7 @@ const expressLayouts = require('express-ejs-layouts');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 // Middlewares
 app.set('view engine', 'ejs');
@@ -72,6 +73,6 @@ app.use((req, res) => {
   res.status(404).render('errors/404');
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST,() => {
   console.log(`E-Modul Interaktif PAI running on http://localhost:${PORT}`);
 });
