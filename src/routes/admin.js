@@ -135,7 +135,7 @@ router.delete('/units/:unitId', async (req, res) => {
 // Manajemen Materi per Unit
 router.get('/units/:unitId/materials/new', async (req, res) => {
   const unitId = req.params.unitId;
-  const units = await db.get('SELECT * FROM units WHERE id = ?', [unitId]);
+  const units = await db.query('SELECT * FROM units WHERE id = ?', [unitId]);
   // Jika unit tidak ada, kembali ke dashboard modul
   if (!units) return res.redirect('/admin/modules');
   res.render('admin/materials/new', { unit: units });
