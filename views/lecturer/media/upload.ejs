@@ -1,0 +1,116 @@
+<!-- Header -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">Upload Media Digital</h2>
+        <a href="/lecturer/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted">Tambahkan video, animasi, atau media pembelajaran lainnya.</p>
+</div>
+
+<% if (error) { %>
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i>
+        <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <% } %>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="POST" action="/lecturer/media/upload" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Judul Media *</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="media_type" class="form-label">Tipe Media *</label>
+                        <select class="form-select" id="media_type" name="media_type" required
+                            onchange="toggleUploadMethod()">
+                            <option value="">Pilih tipe media...</option>
+                            <option value="VIDEO">Video</option>
+                            <option value="ANIMATION">Animasi</option>
+                            <option value="IMAGE">Gambar</option>
+                            <option value="AUDIO">Audio</option>
+                            <option value="DOCUMENT">Dokumen</option>
+                        </select>
+                    </div>
+
+                    <!-- Pilihan Upload Method -->
+                    <div class="mb-3">
+                        <label class="form-label">Metode Upload *</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="upload_method" id="method_url" value="url"
+                                checked onclick="toggleUploadMethod()">
+                            <label class="btn btn-outline-primary" for="method_url">
+                                <i class="bi bi-link-45deg"></i> URL/Link
+                            </label>
+
+                            <input type="radio" class="btn-check" name="upload_method" id="method_file" value="file"
+                                onclick="toggleUploadMethod()">
+                            <label class="btn btn-outline-primary" for="method_file">
+                                <i class="bi bi-upload"></i> Upload File
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div class="mb-3" id="url_input">
+                        <label for="media_url" class="form-label">URL Media</label>
+                        <input type="url" class="form-control" id="media_url" name="media_url"
+                            placeholder="https://...">
+                        <small class="text-muted">Masukkan link YouTube, Google Drive, atau URL media lainnya.</small>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="mb-3" id="file_input" style="display: none;">
+                        <label for="media_file" class="form-label">Upload File</label>
+                        <input type="file" class="form-control" id="media_file" name="media_file"
+                            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.ppt,.pptx">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle"></i> File akan disimpan di: <code>public/uploads/media/</code>
+                            <br>
+                            Maksimal ukuran: 50MB
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Deskripsi</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-cloud-upload"></i> Upload
+                        </button>
+                        <a href="/lecturer/media" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function toggleUploadMethod() {
+                const urlMethod = document.getElementById('method_url').checked;
+                const urlInput = document.getElementById('url_input');
+                const fileInput = document.getElementById('file_input');
+                const mediaUrl = document.getElementById('media_url');
+                const mediaFile = document.getElementById('media_file');
+
+                if (urlMethod) {
+                    urlInput.style.display = 'block';
+                    fileInput.style.display = 'none';
+                    mediaUrl.required = true;
+                    mediaFile.required = false;
+                } else {
+                    urlInput.style.display = 'none';
+                    fileInput.style.display = 'block';
+                    mediaUrl.required = false;
+                    mediaFile.required = true;
+                }
+            }
+        </script>

@@ -1,0 +1,72 @@
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📁 Manajemen Media Digital</h2>
+        <a href="/admin/media/upload" class="btn btn-primary">
+            <i class="bi bi-upload"></i> Upload Media Baru
+        </a>
+    </div>
+
+    <% if (media && media.length> 0) { %>
+        <div class="row">
+            <% media.forEach(function(item) { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title">
+                                    <%= item.title %>
+                                </h5>
+                                <span
+                                    class="badge bg-<%= item.media_type === 'VIDEO' ? 'primary' : item.media_type === 'IMAGE' ? 'success' : 'info' %>">
+                                    <%= item.media_type %>
+                                </span>
+                            </div>
+
+                            <% if (item.description) { %>
+                                <p class="card-text text-muted small">
+                                    <%= item.description %>
+                                </p>
+                                <% } %>
+
+                                    <p class="card-text small">
+                                        <strong>URL:</strong><br>
+                                        <a href="<%= item.media_url %>" target="_blank" class="text-truncate d-block">
+                                            <%= item.media_url %>
+                                        </a>
+                                    </p>
+
+                                    <p class="card-text small text-muted">
+                                        Uploaded: <%= new Date(item.uploaded_at).toLocaleDateString('id-ID') %>
+                                    </p>
+
+                                    <div class="d-flex gap-2">
+                                        <a href="<%= item.media_url %>" target="_blank"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Lihat
+                                        </a>
+                                        <form method="POST" action="/admin/media/<%= item.id %>?_method=DELETE"
+                                            class="d-inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus media ini?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+        <% } else { %>
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Belum ada media yang diupload.
+                <a href="/admin/media/upload" class="alert-link">Upload media pertama Anda</a>
+            </div>
+            <% } %>
+
+                <div class="mt-4">
+                    <a href="/admin/dashboard" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+                    </a>
+                </div>
+</div>

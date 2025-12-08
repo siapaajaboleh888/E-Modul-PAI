@@ -1,0 +1,68 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            🎬 Media Digital
+        </h2>
+        <a href="/lecturer/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted mb-0">
+        Kelola video, animasi, dan media pembelajaran lainnya.
+    </p>
+</div>
+
+<div class="mb-3">
+    <a href="/lecturer/media/upload" class="btn btn-primary">
+        <i class="bi bi-cloud-upload"></i> Upload Media Baru
+    </a>
+</div>
+
+<div class="row g-3">
+    <% if (media && media.length) { %>
+        <% media.forEach(function(m) { %>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="p-2 rounded bg-primary bg-opacity-10">
+                                <% if (m.media_type==='VIDEO' ) { %>
+                                    <i class="bi bi-play-circle text-primary fs-4"></i>
+                                    <% } else if (m.media_type==='ANIMATION' ) { %>
+                                        <i class="bi bi-film text-primary fs-4"></i>
+                                        <% } else { %>
+                                            <i class="bi bi-file-earmark text-primary fs-4"></i>
+                                            <% } %>
+                            </div>
+                            <div class="ms-3">
+                                <h6 class="mb-0 fw-bold">
+                                    <%= m.title %>
+                                </h6>
+                                <small class="text-muted">
+                                    <%= m.media_type %>
+                                </small>
+                            </div>
+                        </div>
+                        <p class="card-text text-muted small">
+                            <%= m.description ? m.description.substring(0, 80) + '...' : 'Tidak ada deskripsi' %>
+                        </p>
+                        <% if (m.media_url) { %>
+                            <a href="<%= m.media_url %>" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-box-arrow-up-right"></i> Lihat Media
+                            </a>
+                            <% } %>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+                <% } else { %>
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Belum ada media digital. Klik "Upload Media Baru" untuk
+                            menambahkan.
+                        </div>
+                    </div>
+                    <% } %>
+</div>

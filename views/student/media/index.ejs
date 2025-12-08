@@ -1,0 +1,203 @@
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold mb-2"
+            style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            🎬 Media Digital Pembelajaran
+        </h2>
+        <p class="text-muted">Akses video, animasi, gambar, audio, dan dokumen pembelajaran</p>
+    </div>
+
+    <!-- Navigasi -->
+    <div class="mb-3">
+        <a href="/student/dashboard" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+
+    <!-- Filter by Type -->
+    <div class="mb-4">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary active" data-filter="all">
+                <i class="bi bi-grid-3x3-gap"></i> Semua
+            </button>
+            <button type="button" class="btn btn-outline-primary" data-filter="VIDEO">
+                <i class="bi bi-play-circle"></i> Video
+            </button>
+            <button type="button" class="btn btn-outline-primary" data-filter="IMAGE">
+                <i class="bi bi-image"></i> Gambar
+            </button>
+            <button type="button" class="btn btn-outline-primary" data-filter="AUDIO">
+                <i class="bi bi-music-note"></i> Audio
+            </button>
+            <button type="button" class="btn btn-outline-primary" data-filter="ANIMATION">
+                <i class="bi bi-film"></i> Animasi
+            </button>
+            <button type="button" class="btn btn-outline-primary" data-filter="DOCUMENT">
+                <i class="bi bi-file-earmark-text"></i> Dokumen
+            </button>
+        </div>
+    </div>
+
+    <!-- Media Grid -->
+    <% if (media && media.length> 0) { %>
+        <div class="row g-4" id="media-grid">
+            <% media.forEach(function(m) { %>
+                <div class="col-md-4 media-card" data-type="<%= m.media_type %>">
+                    <div class="card border-0 shadow-sm h-100 hover-lift">
+                        <div class="card-body">
+                            <!-- Type Badge -->
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="fw-bold mb-0">
+                                    <%= m.title %>
+                                </h5>
+                                <% if (m.media_type==='VIDEO' ) { %>
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-play-circle"></i> Video
+                                    </span>
+                                    <% } else if (m.media_type==='IMAGE' ) { %>
+                                        <span class="badge bg-primary">
+                                            <i class="bi bi-image"></i> Gambar
+                                        </span>
+                                        <% } else if (m.media_type==='AUDIO' ) { %>
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-music-note"></i> Audio
+                                            </span>
+                                            <% } else if (m.media_type==='ANIMATION' ) { %>
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="bi bi-film"></i> Animasi
+                                                </span>
+                                                <% } else if (m.media_type==='DOCUMENT' ) { %>
+                                                    <span class="badge bg-info">
+                                                        <i class="bi bi-file-earmark-text"></i> Dokumen
+                                                    </span>
+                                                    <% } %>
+                            </div>
+
+                            <!-- Description -->
+                            <% if (m.description) { %>
+                                <p class="text-muted small mb-3">
+                                    <%= m.description.length> 100 ? m.description.substring(0, 100) + '...' :
+                                        m.description %>
+                                </p>
+                                <% } else { %>
+                                    <p class="text-muted small mb-3 fst-italic">Tidak ada deskripsi</p>
+                                    <% } %>
+
+                                        <!-- Preview/Thumbnail -->
+                                        <div class="mb-3 text-center bg-light rounded py-4">
+                                            <% if (m.media_type==='VIDEO' ) { %>
+                                                <i class="bi bi-play-circle display-4 text-danger"></i>
+                                                <% } else if (m.media_type==='IMAGE' ) { %>
+                                                    <% if (m.media_url && (m.media_url.startsWith('http') ||
+                                                        m.media_url.startsWith('/'))) { %>
+                                                        <img src="<%= m.media_url %>" alt="<%= m.title %>"
+                                                            class="img-fluid rounded"
+                                                            style="max-height: 150px; object-fit: cover;">
+                                                        <% } else { %>
+                                                            <i class="bi bi-image display-4 text-primary"></i>
+                                                            <% } %>
+                                                                <% } else if (m.media_type==='AUDIO' ) { %>
+                                                                    <i
+                                                                        class="bi bi-music-note-beamed display-4 text-success"></i>
+                                                                    <% } else if (m.media_type==='ANIMATION' ) { %>
+                                                                        <i
+                                                                            class="bi bi-film display-4 text-warning"></i>
+                                                                        <% } else if (m.media_type==='DOCUMENT' ) { %>
+                                                                            <i
+                                                                                class="bi bi-file-earmark-pdf display-4 text-info"></i>
+                                                                            <% } %>
+                                        </div>
+
+                                        <!-- Metadata -->
+                                        <small class="text-muted d-block mb-3">
+                                            <i class="bi bi-calendar"></i>
+                                            <%= new Date(m.uploaded_at).toLocaleDateString('id-ID', { year: 'numeric' ,
+                                                month: 'long' , day: 'numeric' }) %>
+                                        </small>
+
+                                        <!-- Action Buttons -->
+                                        <div class="d-grid gap-2">
+                                            <a href="/student/media/<%= m.id %>" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-eye"></i> Lihat Media
+                                            </a>
+
+                                            <% if (m.media_url.startsWith('/uploads/')) { %>
+                                                <!-- File lokal - download langsung -->
+                                                <a href="<%= m.media_url %>" download class="btn btn-success btn-sm">
+                                                    <i class="bi bi-download"></i> Download File
+                                                </a>
+                                                <% } else if (m.media_url.includes('drive.google.com')) { %>
+                                                    <!-- Google Drive -->
+                                                    <a href="<%= m.media_url.replace('/view', '/download') %>"
+                                                        target="_blank" class="btn btn-success btn-sm">
+                                                        <i class="bi bi-download"></i> Download
+                                                    </a>
+                                                    <% } else if (!m.media_url.includes('youtube.com') &&
+                                                        !m.media_url.includes('youtu.be')) { %>
+                                                        <!-- URL lainnya (bukan YouTube) -->
+                                                        <a href="<%= m.media_url %>" target="_blank" download
+                                                            class="btn btn-success btn-sm">
+                                                            <i class="bi bi-download"></i> Download
+                                                        </a>
+                                                        <% } else { %>
+                                                            <!-- YouTube -->
+                                                            <a href="<%= m.media_url %>" target="_blank"
+                                                                class="btn btn-outline-danger btn-sm">
+                                                                <i class="bi bi-youtube"></i> YouTube
+                                                            </a>
+                                                            <% } %>
+                                        </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+        <% } else { %>
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Belum ada media pembelajaran yang tersedia.
+            </div>
+            <% } %>
+</div>
+
+<script>
+    // Filter functionality
+    document.querySelectorAll('[data-filter]').forEach(button => {
+        button.addEventListener('click', function () {
+            const filter = this.getAttribute('data-filter');
+
+            // Update active button
+            document.querySelectorAll('[data-filter]').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // Filter cards
+            const cards = document.querySelectorAll('.media-card');
+            cards.forEach(card => {
+                if (filter === 'all' || card.getAttribute('data-type') === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .media-card {
+        transition: opacity 0.3s ease;
+    }
+
+    .btn {
+        transition: all 0.2s ease;
+    }
+</style>

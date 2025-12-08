@@ -1,0 +1,95 @@
+<div class="container-fluid py-4">
+    <h2 class="mb-4">⚙️ Pengaturan Sistem</h2>
+
+    <div class="row">
+        <!-- Pengaturan Umum -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-gear"></i> Pengaturan Umum</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/admin/settings">
+                        <div class="mb-3">
+                            <label for="siteName" class="form-label">Nama Situs</label>
+                            <input type="text" class="form-control" id="siteName" name="siteName"
+                                value="<%= settings.siteName || 'E-Modul PAI' %>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="siteDescription" class="form-label">Deskripsi Situs</label>
+                            <textarea class="form-control" id="siteDescription" name="siteDescription"
+                                rows="2"><%= settings.siteDescription || '' %></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="theme" class="form-label">Tema</label>
+                            <select class="form-select" id="theme" name="theme">
+                                <option value="light" <%=settings.theme==='light' ? 'selected' : '' %>>Light</option>
+                                <option value="dark" <%=settings.theme==='dark' ? 'selected' : '' %>>Dark</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="enableRegistration"
+                                name="enableRegistration" <%=settings.enableRegistration==='1' ? 'checked' : '' %>>
+                            <label class="form-check-label" for="enableRegistration">
+                                Aktifkan Registrasi Pengguna Baru
+                            </label>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="maintenanceMode" name="maintenanceMode"
+                                <%=settings.maintenanceMode==='1' ? 'checked' : '' %>>
+                            <label class="form-check-label" for="maintenanceMode">
+                                Mode Maintenance (Hanya admin yang bisa akses)
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Simpan Pengaturan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database & Logs -->
+        <div class="col-md-6 mb-4">
+            <div class="card mb-3">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0"><i class="bi bi-database"></i> Database</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Backup database untuk keamanan data.</p>
+                    <form method="POST" action="/admin/settings/backup">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-download"></i> Backup Database Sekarang
+                        </button>
+                    </form>
+                    <small class="text-muted d-block mt-2">
+                        Backup terakhir: <%= settings.lastBackup || 'Belum pernah' %>
+                    </small>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-journal-text"></i> Log Aktivitas</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Lihat riwayat aktivitas sistem.</p>
+                    <a href="/admin/settings/logs" class="btn btn-info">
+                        <i class="bi bi-eye"></i> Lihat Log
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="/admin/dashboard" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"
+            style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            📊 Laporan Progres Belajar
+        </h2>
+        <a href="/student/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted mb-0">
+        Lihat progres belajar Anda, unit yang sudah selesai, dan skor kuis yang telah dikerjakan.
+    </p>
+</div>
+
+<!-- Statistik Progres -->
+<div class="row mb-4 g-3">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-body text-white">
+                <h6 class="text-white-50 mb-2">📚 Total Unit</h6>
+                <h2 class="fw-bold mb-0">
+                    <%= progress.length || 0 %>
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+            <div class="card-body text-white">
+                <h6 class="text-white-50 mb-2">✅ Unit Selesai</h6>
+                <h2 class="fw-bold mb-0">
+                    <%= progress.filter(p=> p.completion_percentage >= 100).length || 0 %>
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+            <div class="card-body text-white">
+                <h6 class="text-white-50 mb-2">⏳ Dalam Progres</h6>
+                <h2 class="fw-bold mb-0">
+                    <%= progress.filter(p=> p.completion_percentage > 0 && p.completion_percentage < 100).length || 0 %>
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detail Progres per Unit -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">Detail Progres per Unit</h5>
+    </div>
+    <div class="card-body">
+        <% if (progress && progress.length> 0) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Unit</th>
+                            <th>Status</th>
+                            <th>Progres</th>
+                            <th>Terakhir Diakses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% progress.forEach(function(p) { %>
+                            <% var percentage=p.completion_percentage || 0; %>
+                                <tr>
+                                    <td><strong>Unit #<%= p.unit_id %></strong></td>
+                                    <td>
+                                        <% if (percentage>= 100) { %>
+                                            <span class="badge bg-success">Selesai</span>
+                                            <% } else if (percentage> 0) { %>
+                                                <span class="badge bg-warning">Dalam Progres</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-secondary">Belum Mulai</span>
+                                                    <% } %>
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width: <%= percentage %>%" aria-valuenow="<%= percentage %>"
+                                                aria-valuemin="0" aria-valuemax="100">
+                                                <%= Math.round(percentage) %>%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><small class="text-muted">
+                                            <%= p.last_accessed ? new Date(p.last_accessed).toLocaleDateString('id-ID')
+                                                : '-' %>
+                                        </small></td>
+                                </tr>
+                                <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> Belum ada progres tercatat. Mulai belajar sekarang!
+                </div>
+                <% } %>
+    </div>
+</div>

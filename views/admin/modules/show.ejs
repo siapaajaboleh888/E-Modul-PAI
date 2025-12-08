@@ -1,12 +1,28 @@
-<h2 class="mb-3">Detail Modul</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Detail Modul</h2>
+  <div class="d-flex gap-2">
+    <a href="/admin/modules" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Kembali ke Daftar Modul
+    </a>
+    <a href="/admin/dashboard" class="btn btn-outline-primary">
+      <i class="bi bi-house"></i> Dashboard
+    </a>
+  </div>
+</div>
 <div class="card mb-3">
   <div class="card-body">
-    <h4><%= module.title %></h4>
-    <p class="text-muted"><%= module.description || '-' %></p>
+    <h4>
+      <%= module.title %>
+    </h4>
+    <p class="text-muted">
+      <%= module.description || '-' %>
+    </p>
     <% if (module.learning_outcomes) { %>
       <h6>Capaian Pembelajaran:</h6>
-      <p><%= module.learning_outcomes %></p>
-    <% } %>
+      <p>
+        <%= module.learning_outcomes %>
+      </p>
+      <% } %>
   </div>
 </div>
 
@@ -29,25 +45,32 @@
     <% if (units && units.length) { %>
       <% units.forEach(function(u, idx) { %>
         <tr>
-          <td><%= idx + 1 %></td>
-          <td><%= u.title %></td>
-          <td><%= u.description || '-' %></td>
+          <td>
+            <%= idx + 1 %>
+          </td>
+          <td>
+            <%= u.title %>
+          </td>
+          <td>
+            <%= u.description || '-' %>
+          </td>
           <td>
             <a href="/admin/units/<%= u.id %>/activities" class="btn btn-sm btn-outline-primary">Aktivitas/Ujian</a>
           </td>
           <td class="d-flex gap-1">
             <a href="/admin/units/<%= u.id %>/materials/new" class="btn btn-sm btn-outline-secondary">Tambah Materi</a>
             <a href="/admin/units/<%= u.id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
-            <form method="POST" action="/admin/units/<%= u.id %>?_method=DELETE" onsubmit="return confirm('Hapus unit ini beserta materi di dalamnya?');">
+            <form method="POST" action="/admin/units/<%= u.id %>?_method=DELETE"
+              onsubmit="return confirm('Hapus unit ini beserta materi di dalamnya?');">
               <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
             </form>
           </td>
         </tr>
-      <% }) %>
-    <% } else { %>
-      <tr>
-        <td colspan="4" class="text-center text-muted">Belum ada unit.</td>
-      </tr>
-    <% } %>
+        <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="4" class="text-center text-muted">Belum ada unit.</td>
+            </tr>
+            <% } %>
   </tbody>
 </table>

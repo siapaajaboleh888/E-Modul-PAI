@@ -1,32 +1,48 @@
-<h3 class="mb-3">Edit Aktivitas: <%= activity.title %></h3>
-<p class="text-muted">Unit: <%= unit.title %></p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="mb-1">Edit Aktivitas: <%= activity.title %>
+    </h3>
+    <p class="text-muted mb-0">Unit: <%= unit.title %>
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/admin/units/<%= unit.id %>/activities" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Kembali
+    </a>
+    <a href="/admin/dashboard" class="btn btn-outline-primary">
+      <i class="bi bi-house"></i> Dashboard
+    </a>
+  </div>
+</div>
 
 <% if (error) { %>
-  <div class="alert alert-danger"><%= error %></div>
-<% } %>
-
-<form method="POST" action="/admin/activities/<%= activity.id %>?_method=PUT">
-  <div class="mb-3">
-    <label class="form-label">Judul</label>
-    <input type="text" name="title" class="form-control" value="<%= activity.title %>" required />
+  <div class="alert alert-danger">
+    <%= error %>
   </div>
+  <% } %>
 
-  <div class="mb-3">
-    <label class="form-label">Deskripsi / Instruksi</label>
-    <textarea name="description" class="form-control" rows="4"><%= activity.description || '' %></textarea>
-  </div>
+    <form method="POST" action="/admin/activities/<%= activity.id %>?_method=PUT">
+      <div class="mb-3">
+        <label class="form-label">Judul</label>
+        <input type="text" name="title" class="form-control" value="<%= activity.title %>" required />
+      </div>
 
-  <div class="mb-3">
-    <label class="form-label">Tanggal Jatuh Tempo</label>
-    <input type="datetime-local" name="due_date" class="form-control" value="" />
-    <div class="form-text">Untuk saat ini, nilai tanggal tidak dipre-populate secara otomatis.</div>
-  </div>
+      <div class="mb-3">
+        <label class="form-label">Deskripsi / Instruksi</label>
+        <textarea name="description" class="form-control" rows="4"><%= activity.description || '' %></textarea>
+      </div>
 
-  <div class="mb-3">
-    <label class="form-label">Skor Maksimal</label>
-    <input type="number" name="max_score" class="form-control" min="0" value="<%= activity.max_score || '' %>" />
-  </div>
+      <div class="mb-3">
+        <label class="form-label">Tanggal Jatuh Tempo</label>
+        <input type="datetime-local" name="due_date" class="form-control" value="" />
+        <div class="form-text">Untuk saat ini, nilai tanggal tidak dipre-populate secara otomatis.</div>
+      </div>
 
-  <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-  <a href="/admin/units/<%= unit.id %>/activities" class="btn btn-secondary">Batal</a>
-</form>
+      <div class="mb-3">
+        <label class="form-label">Skor Maksimal</label>
+        <input type="number" name="max_score" class="form-control" min="0" value="<%= activity.max_score || '' %>" />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+      <a href="/admin/units/<%= unit.id %>/activities" class="btn btn-secondary">Batal</a>
+    </form>

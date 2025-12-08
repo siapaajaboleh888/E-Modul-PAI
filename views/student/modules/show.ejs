@@ -1,19 +1,36 @@
-<h2 class="mb-3">Modul: <%= module.title %></h2>
-<p class="text-muted"><%= module.description || '-' %></p>
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold mb-0"
+      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+      📚 <%= module.title %>
+    </h2>
+    <a href="/student/modules" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Kembali ke Modul
+    </a>
+  </div>
+  <p class="text-muted mb-0">
+    <%= module.description || 'Pilih unit pembelajaran yang ingin Anda pelajari.' %>
+  </p>
+</div>
 
-<h5 class="mt-4">Unit Pembelajaran</h5>
+<h5 class="fw-bold mb-3">📖 Unit Pembelajaran</h5>
 <ul class="list-group">
   <% if (units && units.length) { %>
     <% units.forEach(function(u) { %>
       <li class="list-group-item d-flex justify-content-between align-items-center">
         <div>
-          <strong><%= u.title %></strong><br />
-          <span class="text-muted small"><%= u.description || '-' %></span>
+          <strong>
+            <%= u.title %>
+          </strong><br />
+          <span class="text-muted small">
+            <%= u.description || '-' %>
+          </span>
         </div>
         <a href="/student/units/<%= u.id %>" class="btn btn-sm btn-outline-primary">Lihat Materi</a>
       </li>
-    <% }) %>
-  <% } else { %>
-    <li class="list-group-item text-muted">Belum ada unit untuk modul ini.</li>
-  <% } %>
+      <% }) %>
+        <% } else { %>
+          <li class="list-group-item text-muted">Belum ada unit untuk modul ini.</li>
+          <% } %>
 </ul>

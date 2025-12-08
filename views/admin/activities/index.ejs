@@ -1,51 +1,189 @@
-<h3 class="mb-3">Aktivitas/Ujian untuk: <%= unit.title %></h3>
-<p class="text-muted">Kelola kuis dan tugas untuk unit ini.</p>
-
-<div class="mb-3">
-  <a href="/admin/modules/<%= unit.module_id %>" class="btn btn-sm btn-outline-secondary">&laquo; Kembali ke Modul</a>
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+  <h2 class="fw-bold mb-2"
+    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+    🎯 Manajemen Aktivitas
+  </h2>
+  <p class="text-muted">Kelola kuis dan tugas untuk setiap unit pembelajaran</p>
 </div>
 
-<div class="mb-3">
-  <a href="/admin/units/<%= unit.id %>/activities/new?type=QUIZ" class="btn btn-primary me-2">Tambah Kuis</a>
-  <a href="/admin/units/<%= unit.id %>/activities/new?type=TASK" class="btn btn-success">Tambah Tugas</a>
+<!-- Filter dan Search -->
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col-md-4">
+        <select id="filterType" class="form-select">
+          <option value="">Semua Tipe</option>
+          <option value="QUIZ">Kuis</option>
+          <option value="TASK">Tugas</option>
+          <option value="EXAM">Ujian</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <input type="text" id="searchActivity" class="form-control" placeholder="🔍 Cari aktivitas...">
+      </div>
+      <div class="col-md-4 text-end">
+        <a href="/admin/modules" class="btn btn-outline-primary">
+          <i class="bi bi-arrow-left"></i> Kembali ke Modul
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 
-<table class="table table-bordered align-middle">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Jenis</th>
-      <th>Judul</th>
-      <th>Jatuh Tempo</th>
-      <th>Skor Maks.</th>
-      <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if (activities && activities.length) { %>
-      <% activities.forEach(function(a, idx) { %>
-        <tr>
-          <td><%= idx + 1 %></td>
-          <td><%= a.type %></td>
-          <td><%= a.title %></td>
-          <td><%= a.due_date ? a.due_date.toLocaleString ? a.due_date.toLocaleString() : a.due_date : '-' %></td>
-          <td><%= a.max_score || '-' %></td>
-          <td>
-            <% if (a.type === 'QUIZ') { %>
-              <a href="/admin/activities/<%= a.id %>/questions" class="btn btn-sm btn-outline-primary">Kelola Soal</a>
-            <% } %>
-            <a href="/admin/activities/<%= a.id %>/results" class="btn btn-sm btn-outline-success ms-1">Lihat Hasil</a>
-            <a href="/admin/activities/<%= a.id %>/edit" class="btn btn-sm btn-warning ms-1">Edit</a>
-            <form method="POST" action="/admin/activities/<%= a.id %>?_method=DELETE" class="d-inline ms-1" onsubmit="return confirm('Yakin ingin menghapus aktivitas ini?');">
-              <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
-            </form>
-          </td>
-        </tr>
-      <% }) %>
-    <% } else { %>
-      <tr>
-        <td colspan="6" class="text-center text-muted">Belum ada aktivitas untuk unit ini.</td>
-      </tr>
+<!-- Daftar Aktivitas -->
+<% if (activities && activities.length> 0) { %>
+  <div class="row g-3">
+    <% activities.forEach((activity, index)=> { %>
+      <div class="col-md-6 activity-item" data-type="<%= activity.type %>">
+        <div class="card border-0 shadow-sm h-100 hover-lift">
+          <div class="card-body">
+            <div class="d-flex align-items-start mb-3">
+              <div class="p-2 rounded me-3" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <% if (activity.type==='QUIZ' ) { %>
+                  <i class="bi bi-question-circle text-white fs-4"></i>
+                  <% } else if (activity.type==='TASK' ) { %>
+                    <i class="bi bi-clipboard-check text-white fs-4"></i>
+                    <% } else { %>
+                      <i class="bi bi-pencil-square text-white fs-4"></i>
+                      <% } %>
+              </div>
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start">
+                  <h5 class="fw-bold mb-1">
+                    <%= activity.title %>
+                  </h5>
+                  <% if (activity.type==='QUIZ' ) { %>
+                    <span class="badge bg-primary">Kuis</span>
+                    <% } else if (activity.type==='TASK' ) { %>
+                      <span class="badge bg-success">Tugas</span>
+                      <% } else { %>
+                        <span class="badge bg-danger">Ujian</span>
+                        <% } %>
+                </div>
+                <small class="text-muted">
+                  <i class="bi bi-book"></i>
+                  <%= activity.module_title %> › <%= activity.unit_title %>
+                </small>
+              </div>
+            </div>
+
+            <% if (activity.description) { %>
+              <p class="text-muted small mb-2">
+                <%= activity.description.length> 120 ? activity.description.substring(0, 120) + '...' :
+                  activity.description %>
+              </p>
+              <% } %>
+
+                <div class="row g-2 mb-3">
+                  <% if (activity.max_score) { %>
+                    <div class="col-auto">
+                      <small class="text-muted">
+                        <i class="bi bi-star-fill text-warning"></i> Max: <%= activity.max_score %>
+                      </small>
+                    </div>
+                    <% } %>
+                      <% if (activity.due_date) { %>
+                        <div class="col-auto">
+                          <small class="text-muted">
+                            <i class="bi bi-calendar-event"></i>
+                            <%= new Date(activity.due_date).toLocaleDateString('id-ID') %>
+                          </small>
+                        </div>
+                        <% } %>
+                          <% if (activity.question_count !==undefined) { %>
+                            <div class="col-auto">
+                              <small class="text-muted">
+                                <i class="bi bi-list-ol"></i>
+                                <%= activity.question_count %> soal
+                              </small>
+                            </div>
+                            <% } %>
+                </div>
+
+                <div class="d-flex gap-2">
+                  <% if (activity.type==='QUIZ' ) { %>
+                    <a href="/admin/activities/<%= activity.id %>/questions"
+                      class="btn btn-sm btn-outline-primary flex-grow-1">
+                      <i class="bi bi-list-ol"></i> Kelola Soal
+                    </a>
+                    <% } %>
+                      <a href="/admin/activities/<%= activity.id %>/results"
+                        class="btn btn-sm btn-outline-success flex-grow-1">
+                        <i class="bi bi-graph-up"></i> Hasil
+                      </a>
+                      <a href="/admin/activities/<%= activity.id %>/edit" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil"></i>
+                      </a>
+                </div>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+  </div>
+  <% } else { %>
+    <div class="text-center py-5">
+      <div class="p-4 rounded-circle bg-light d-inline-flex mb-3">
+        <i class="bi bi-puzzle text-muted" style="font-size: 3rem;"></i>
+      </div>
+      <p class="text-muted">Belum ada aktivitas yang tersedia.</p>
+      <a href="/admin/modules" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Tambah Aktivitas Baru
+      </a>
+    </div>
     <% } %>
-  </tbody>
-</table>
+
+      <style>
+        .hover-lift {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+      </style>
+
+      <script>
+        // Search functionality
+        document.getElementById('searchActivity').addEventListener('input', function (e) {
+          const searchTerm = e.target.value.toLowerCase();
+          const activities = document.querySelectorAll('.activity-item');
+
+          activities.forEach(activity => {
+            const text = activity.textContent.toLowerCase();
+            const typeFilter = document.getElementById('filterType').value;
+            const activityType = activity.getAttribute('data-type');
+
+            const matchesSearch = text.includes(searchTerm);
+            const matchesType = !typeFilter || activityType === typeFilter;
+
+            if (matchesSearch && matchesType) {
+              activity.style.display = '';
+            } else {
+              activity.style.display = 'none';
+            }
+          });
+        });
+
+        // Filter by type
+        document.getElementById('filterType').addEventListener('change', function (e) {
+          const filterType = e.target.value;
+          const activities = document.querySelectorAll('.activity-item');
+          const searchTerm = document.getElementById('searchActivity').value.toLowerCase();
+
+          activities.forEach(activity => {
+            const activityType = activity.getAttribute('data-type');
+            const text = activity.textContent.toLowerCase();
+
+            const matchesType = !filterType || activityType === filterType;
+            const matchesSearch = !searchTerm || text.includes(searchTerm);
+
+            if (matchesType && matchesSearch) {
+              activity.style.display = '';
+            } else {
+              activity.style.display = 'none';
+            }
+          });
+        });
+      </script>

@@ -1,0 +1,137 @@
+<!-- Header -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="fw-bold">Detail Progres Mahasiswa</h2>
+        <a href="/lecturer/reports" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali
+        </a>
+    </div>
+</div>
+
+<!-- Info Mahasiswa -->
+<div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="card-body text-white">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h4 class="mb-2">
+                    <%= student.name %>
+                </h4>
+                <p class="mb-1"><i class="bi bi-envelope"></i>
+                    <%= student.email %>
+                </p>
+                <p class="mb-0"><i class="bi bi-building"></i>
+                    <%= student.institution || '-' %> | Semester <%= student.semester || '-' %>
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <span class="badge bg-light text-dark fs-6">Mahasiswa</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tugas yang Dikumpulkan -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">📝 Tugas yang Dikumpulkan</h5>
+    </div>
+    <div class="card-body">
+        <% if (submissions && submissions.length) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tugas</th>
+                            <th>Tanggal Submit</th>
+                            <th>Nilai</th>
+                            <th>Feedback</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% submissions.forEach(function(s) { %>
+                            <tr>
+                                <td>
+                                    <%= s.activity_title %>
+                                </td>
+                                <td>
+                                    <small>
+                                        <%= new Date(s.submitted_at).toLocaleDateString('id-ID') %>
+                                    </small>
+                                </td>
+                                <td>
+                                    <% if (s.score !==null) { %>
+                                        <span class="badge <%= s.score>= 75 ? 'bg-success' : s.score>= 60 ?
+                                            'bg-warning' : 'bg-danger' %>">
+                                            <%= s.score %> / <%= s.max_score || 100 %>
+                                        </span>
+                                        <% } else { %>
+                                            <span class="badge bg-secondary">Belum dinilai</span>
+                                            <% } %>
+                                </td>
+                                <td>
+                                    <% if (s.feedback) { %>
+                                        <small>
+                                            <%= s.feedback.substring(0, 50) %>...
+                                        </small>
+                                        <% } else { %>
+                                            <span class="text-muted">-</span>
+                                            <% } %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> Belum ada tugas yang dikumpulkan.
+                </div>
+                <% } %>
+    </div>
+</div>
+
+<!-- Hasil Kuis -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">📊 Hasil Kuis</h5>
+    </div>
+    <div class="card-body">
+        <% if (quizAttempts && quizAttempts.length) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Kuis</th>
+                            <th>Tanggal</th>
+                            <th>Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% quizAttempts.forEach(function(q) { %>
+                            <tr>
+                                <td>
+                                    <%= q.activity_title %>
+                                </td>
+                                <td>
+                                    <small>
+                                        <%= new Date(q.submitted_at).toLocaleDateString('id-ID') %>
+                                    </small>
+                                </td>
+                                <td>
+                                    <span class="badge <%= q.score>= 75 ? 'bg-success' : q.score>= 60 ? 'bg-warning' :
+                                        'bg-danger' %>">
+                                        <%= q.score %> / <%= q.max_score || 100 %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> Belum ada kuis yang dikerjakan.
+                </div>
+                <% } %>
+    </div>
+</div>

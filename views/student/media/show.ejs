@@ -1,0 +1,224 @@
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold mb-2">
+            <%= media.title %>
+        </h2>
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+            <% if (media.media_type==='VIDEO' ) { %>
+                <span class="badge bg-danger">
+                    <i class="bi bi-play-circle"></i> Video
+                </span>
+                <% } else if (media.media_type==='IMAGE' ) { %>
+                    <span class="badge bg-primary">
+                        <i class="bi bi-image"></i> Gambar
+                    </span>
+                    <% } else if (media.media_type==='AUDIO' ) { %>
+                        <span class="badge bg-success">
+                            <i class="bi bi-music-note"></i> Audio
+                        </span>
+                        <% } else if (media.media_type==='ANIMATION' ) { %>
+                            <span class="badge bg-warning text-dark">
+                                <i class="bi bi-film"></i> Animasi
+                            </span>
+                            <% } else if (media.media_type==='DOCUMENT' ) { %>
+                                <span class="badge bg-info">
+                                    <i class="bi bi-file-earmark-text"></i> Dokumen
+                                </span>
+                                <% } %>
+
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i>
+                                        <%= new Date(media.uploaded_at).toLocaleDateString('id-ID', { year: 'numeric' ,
+                                            month: 'long' , day: 'numeric' }) %>
+                                    </small>
+        </div>
+    </div>
+
+    <!-- Navigasi -->
+    <div class="mb-4">
+        <a href="/student/media" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Kembali ke Daftar Media
+        </a>
+        <a href="/student/dashboard" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-house"></i> Dashboard
+        </a>
+    </div>
+
+    <!-- Media Content -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <!-- Description -->
+            <% if (media.description) { %>
+                <div class="mb-4">
+                    <h6 class="fw-bold">Deskripsi:</h6>
+                    <p class="text-muted">
+                        <%= media.description %>
+                    </p>
+                </div>
+                <% } %>
+
+                    <!-- Media Player/Viewer -->
+                    <div class="bg-light p-4 rounded mb-4">
+                        <% if (media.media_type==='VIDEO' ) { %>
+                            <div class="ratio ratio-16x9">
+                                <% if (media.media_url.includes('youtube.com') || media.media_url.includes('youtu.be'))
+                                    { %>
+                                    <% let videoId='' ; if (media.media_url.includes('youtube.com/watch?v=')) {
+                                    videoId = media.media_url.split(' v=')[1].split(' &')[0]; } else if
+                                        (media.media_url.includes('youtube.com/embed/')) {
+                                        videoId=media.media_url.split('embed/')[1].split('?')[0]; } else if
+                                        (media.media_url.includes('youtu.be/')) {
+                                        videoId=media.media_url.split('youtu.be/')[1].split('?')[0]; } %>
+                                        <iframe src="https://www.youtube.com/embed/<%= videoId %>"
+                                            allowfullscreen></iframe>
+                                        <% } else { %>
+                                            <video controls class="w-100">
+                                                <source src="<%= media.media_url %>" type="video/mp4">
+                                                Browser Anda tidak mendukung video player.
+                                            </video>
+                                            <% } %>
+                            </div>
+
+                            <% } else if (media.media_type==='IMAGE' ) { %>
+                                <div class="text-center">
+                                    <img src="<%= media.media_url %>" alt="<%= media.title %>"
+                                        class="img-fluid rounded shadow" style="max-width: 100%; max-height: 600px;">
+                                </div>
+
+                                <% } else if (media.media_type==='AUDIO' ) { %>
+                                    <div class="text-center py-4">
+                                        <i class="bi bi-music-note-beamed display-1 text-success mb-4"></i>
+                                        <audio controls class="w-100">
+                                            <source src="<%= media.media_url %>" type="audio/mpeg">
+                                            Browser Anda tidak mendukung audio player.
+                                        </audio>
+                                    </div>
+
+                                    <% } else if (media.media_type==='ANIMATION' ) { %>
+                                        <div class="ratio ratio-16x9">
+                                            <iframe src="<%= media.media_url %>" allowfullscreen></iframe>
+                                        </div>
+
+                                        <% } else if (media.media_type==='DOCUMENT' ) { %>
+                                            <div class="text-center py-5">
+                                                <i class="bi bi-file-earmark-pdf display-1 text-danger mb-3"></i>
+                                                <p class="mb-0">Dokumen PDF/Office</p>
+                                            </div>
+                                            <% } %>
+                    </div>
+
+                    <!-- Download & Actions Section -->
+                    <div class="card bg-light border-0">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-tools"></i> Aksi & Download</h6>
+
+                            <!-- URL Copy -->
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Link Media:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="<%= media.media_url %>" readonly
+                                        id="mediaUrl">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="copyUrl()">
+                                        <i class="bi bi-clipboard"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <a href="<%= media.media_url %>" target="_blank" class="btn btn-info w-100">
+                                        <i class="bi bi-box-arrow-up-right"></i> Buka di Tab Baru
+                                    </a>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <% if (media.media_url.startsWith('/uploads/')) { %>
+                                        <!-- File lokal - direct download -->
+                                        <a href="<%= media.media_url %>" download class="btn btn-success w-100">
+                                            <i class="bi bi-download"></i> Download File
+                                        </a>
+                                        <% } else if (media.media_url.includes('youtube.com') ||
+                                            media.media_url.includes('youtu.be')) { %>
+                                            <!-- YouTube - tidak bisa download langsung -->
+                                            <a href="<%= media.media_url %>" target="_blank"
+                                                class="btn btn-outline-danger w-100">
+                                                <i class="bi bi-youtube"></i> Tonton di YouTube
+                                            </a>
+                                            <% } else if (media.media_url.includes('drive.google.com')) { %>
+                                                <!-- Google Drive -->
+                                                <a href="<%= media.media_url.replace('/view', '/download') %>"
+                                                    target="_blank" class="btn btn-success w-100">
+                                                    <i class="bi bi-download"></i> Download dari Drive
+                                                </a>
+                                                <% } else { %>
+                                                    <!-- URL eksternal lainnya -->
+                                                    <a href="<%= media.media_url %>" target="_blank" download
+                                                        class="btn btn-success w-100">
+                                                        <i class="bi bi-download"></i> Download/Save
+                                                    </a>
+                                                    <% } %>
+                                </div>
+                            </div>
+
+                            <!-- Download Tips -->
+                            <div class="alert alert-info mt-3 mb-0">
+                                <small>
+                                    <i class="bi bi-info-circle"></i>
+                                    <strong>Tips:</strong>
+                                    <% if (media.media_url.startsWith('/uploads/')) { %>
+                                        File ini tersimpan di server, klik "Download File" untuk mengunduh.
+                                        <% } else if (media.media_url.includes('youtube.com') ||
+                                            media.media_url.includes('youtu.be')) { %>
+                                            Video YouTube dapat ditonton online. Gunakan tool pihak ketiga untuk
+                                            download.
+                                            <% } else if (media.media_url.includes('drive.google.com')) { %>
+                                                Klik "Download dari Drive" untuk mengunduh dari Google Drive.
+                                                <% } else { %>
+                                                    Klik "Download/Save" atau "Buka di Tab Baru" untuk mengakses file.
+                                                    <% } %>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyUrl() {
+        const urlInput = document.getElementById('mediaUrl');
+        urlInput.select();
+        urlInput.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+
+        // Show toast notification
+        const btn = event.target.closest('button');
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+        btn.classList.add('btn-success');
+        btn.classList.remove('btn-outline-secondary');
+
+        setTimeout(() => {
+            btn.innerHTML = originalHtml;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-secondary');
+        }, 2000);
+    }
+</script>
+
+<style>
+    .card {
+        border-radius: 12px;
+    }
+
+    iframe {
+        border: none;
+        border-radius: 8px;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+</style>

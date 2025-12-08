@@ -1,0 +1,140 @@
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">📤 Upload Media Baru</h2>
+        <a href="/admin/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="/admin/media/upload" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Judul Media *</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="media_type" class="form-label">Tipe Media *</label>
+                            <select class="form-select" id="media_type" name="media_type" required>
+                                <option value="">-- Pilih Tipe --</option>
+                                <option value="VIDEO">Video</option>
+                                <option value="ANIMATION">Animasi</option>
+                                <option value="IMAGE">Gambar</option>
+                                <option value="AUDIO">Audio</option>
+                                <option value="DOCUMENT">Dokumen</option>
+                            </select>
+                        </div>
+
+                        <!-- Pilihan Upload Method -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Metode Upload Media *</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="upload_method" id="method_url" value="url"
+                                    checked>
+                                <label class="btn btn-outline-primary" for="method_url">
+                                    <i class="bi bi-link-45deg"></i> URL/Link
+                                </label>
+
+                                <input type="radio" class="btn-check" name="upload_method" id="method_file"
+                                    value="file">
+                                <label class="btn btn-outline-primary" for="method_file">
+                                    <i class="bi bi-file-earmark-arrow-up"></i> Upload File
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- URL Input -->
+                        <div class="mb-3" id="url_input">
+                            <label for="media_url" class="form-label">URL Media *</label>
+                            <input type="url" class="form-control" id="media_url" name="media_url"
+                                placeholder="https://example.com/media.mp4">
+                            <div class="form-text">Masukkan URL lengkap ke file media (YouTube, Google Drive, atau
+                                hosting lainnya)</div>
+                        </div>
+
+                        <!-- File Upload (Hidden by default) -->
+                        <div class="mb-3 d-none" id="file_input">
+                            <label for="media_file" class="form-label">Upload File Media *</label>
+                            <input type="file" class="form-control" id="media_file" name="media_file" accept="*/*">
+                            <div class="form-text">
+                                <strong>Catatan:</strong>
+                                <ul class="small mb-0">
+                                    <li>Maksimal ukuran file: 50MB</li>
+                                    <li>Format yang didukung: Video (mp4, avi, mkv), Audio (mp3, wav), Gambar (jpg, png,
+                                        gif), Dokumen (pdf, doc, ppt)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Deskripsi</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload"></i> Upload Media
+                            </button>
+                            <a href="/admin/media" class="btn btn-secondary">
+                                <i class="bi bi-x"></i> Batal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">💡 Tips Upload Media</h5>
+
+                    <h6 class="mt-3 mb-2"><strong>Menggunakan URL:</strong></h6>
+                    <ul class="small">
+                        <li>Gunakan URL yang dapat diakses publik</li>
+                        <li>Untuk YouTube: Copy link video</li>
+                        <li>Untuk Google Drive: Set sharing ke "Anyone with the link"</li>
+                        <li>Pastikan URL valid dan file dapat diakses</li>
+                    </ul>
+
+                    <h6 class="mt-3 mb-2"><strong>Upload File:</strong></h6>
+                    <ul class="small">
+                        <li>File akan disimpan di server</li>
+                        <li>Lebih cepat untuk file berukuran kecil</li>
+                        <li>Tidak perlu hosting eksternal</li>
+                        <li>Pastikan file tidak terlalu besar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle between URL and File upload
+    document.querySelectorAll('input[name="upload_method"]').forEach((radio) => {
+        radio.addEventListener('change', function () {
+            const urlInput = document.getElementById('url_input');
+            const fileInput = document.getElementById('file_input');
+            const urlField = document.getElementById('media_url');
+            const fileField = document.getElementById('media_file');
+
+            if (this.value === 'url') {
+                urlInput.classList.remove('d-none');
+                fileInput.classList.add('d-none');
+                urlField.required = true;
+                fileField.required = false;
+                fileField.value = '';
+            } else {
+                urlInput.classList.add('d-none');
+                fileInput.classList.remove('d-none');
+                urlField.required = false;
+                fileField.required = true;
+                urlField.value = '';
+            }
+        });
+    });
+</script>

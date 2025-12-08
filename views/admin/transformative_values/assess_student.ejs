@@ -1,0 +1,159 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <h2 class="fw-bold mb-2"
+        style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+        ⭐ Penilaian Nilai Transformatif
+    </h2>
+    <p class="text-muted">Berikan penilaian nilai transformatif untuk <strong>
+            <%= student.name %>
+        </strong></p>
+</div>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin/transformative-values">Nilai Transformatif</a></li>
+        <li class="breadcrumb-item"><a href="/admin/transformative-values/assessments">Penilaian</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <%= student.name %>
+        </li>
+    </ol>
+</nav>
+
+<!-- Student Info Card -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center">
+                    <div class="p-3 rounded-circle me-3"
+                        style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                        <i class="bi bi-person-fill text-white fs-3"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-1 fw-bold">
+                            <%= student.name %>
+                        </h4>
+                        <p class="text-muted mb-1"><i class="bi bi-envelope"></i>
+                            <%= student.email %>
+                        </p>
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-building"></i>
+                            <%= student.institution || '-' %> |
+                                Semester <%= student.semester || '-' %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/admin/transformative-values/assessments" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Kembali
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assessment Forms -->
+<% if (values && values.length> 0) { %>
+    <div class="row g-3">
+        <% values.forEach((value, index)=> {
+            // Cari assessment yang sudah ada untuk value ini
+            const existingAssessment = assessments.find(a => a.value_id == value.id);
+            %>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="p-2 rounded me-3"
+                                style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                                <i class="bi bi-star-fill text-white fs-4"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-1">
+                                    <%= value.value_name %>
+                                </h5>
+                                <p class="text-muted small mb-0">
+                                    <%= value.description || '' %>
+                                </p>
+                            </div>
+                        </div>
+
+                        <% if (value.indicators) { %>
+                            <div class="alert alert-light mb-3">
+                                <small class="text-muted">
+                                    <strong>Indikator:</strong>
+                                    <%= value.indicators %>
+                                </small>
+                            </div>
+                            <% } %>
+
+                                <form method="POST" action="/admin/transformative-values/assessments/<%= student.id %>">
+                                    <input type="hidden" name="value_id" value="<%= value.id %>">
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Skor (0-100)</label>
+                                        <input type="number" class="form-control" name="score" min="0" max="100"
+                                            value="<%= existingAssessment ? existingAssessment.score : '' %>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Catatan</label>
+                                        <textarea class="form-control" name="notes"
+                                            rows="3"><%= existingAssessment ? existingAssessment.notes || '' : '' %></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="bi bi-check-circle"></i>
+                                        <%= existingAssessment ? 'Perbarui Penilaian' : 'Simpan Penilaian' %>
+                                    </button>
+
+                                    <% if (existingAssessment) { %>
+                                        <div class="mt-2 text-center">
+                                            <small class="text-muted">
+                                                Dinilai: <%= new
+                                                    Date(existingAssessment.assessed_at).toLocaleDateString('id-ID') %>
+                                            </small>
+                                        </div>
+                                        <% } %>
+                                </form>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+    </div>
+    <% } else { %>
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Nilai transformatif belum didefinisikan.</strong> Silakan <a
+                href="/admin/transformative-values">tambahkan nilai transformatif</a> terlebih dahulu.
+        </div>
+        <% } %>
+
+            <style>
+                .hover-lift {
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+
+                .hover-lift:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+                }
+
+                .card {
+                    border-radius: 12px;
+                }
+
+                .btn-success {
+                    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+                    border: none;
+                    transition: all 0.3s ease;
+                }
+
+                .btn-success:hover {
+                    background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4);
+                }
+            </style>

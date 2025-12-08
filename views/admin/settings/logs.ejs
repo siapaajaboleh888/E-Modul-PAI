@@ -1,0 +1,73 @@
+<h2 class="mb-4">📋 Log Aktivitas Sistem</h2>
+
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Riwayat Aktivitas</h5>
+            <span class="badge bg-light text-dark">
+                <%= logs ? logs.length : 0 %> Log
+            </span>
+        </div>
+    </div>
+    <div class="card-body">
+        <% if (logs && logs.length> 0) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Waktu</th>
+                            <th>User</th>
+                            <th>Aksi</th>
+                            <th>Deskripsi</th>
+                            <th>IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% logs.forEach(function(log) { %>
+                            <tr>
+                                <td><small>
+                                        <%= new Date(log.created_at).toLocaleString('id-ID') %>
+                                    </small></td>
+                                <td>
+                                    <% if (log.user_id) { %>
+                                        <span class="badge bg-primary">User #<%= log.user_id %></span>
+                                        <% } else { %>
+                                            <span class="badge bg-secondary">System</span>
+                                            <% } %>
+                                </td>
+                                <td><strong>
+                                        <%= log.action %>
+                                    </strong></td>
+                                <td><small>
+                                        <%= log.description || '-' %>
+                                    </small></td>
+                                <td><code><%= log.ip_address || '-' %></code></td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-info">
+                    Belum ada log aktivitas yang tercatat.
+                </div>
+
+                <div class="mt-3">
+                    <h6>Tentang Log Aktivitas:</h6>
+                    <p class="text-muted">
+                        Log aktivitas akan mencatat semua aksi penting yang dilakukan di sistem, seperti:
+                    </p>
+                    <ul class="text-muted">
+                        <li>Login/Logout user</li>
+                        <li>Penambahan/Edit/Hapus data</li>
+                        <li>Upload media</li>
+                        <li>Perubahan pengaturan sistem</li>
+                    </ul>
+                </div>
+                <% } %>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="/admin/settings" class="btn btn-secondary">Kembali ke Pengaturan</a>
+</div>

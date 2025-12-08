@@ -1,0 +1,70 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            ✍️ Penilaian Tugas & Refleksi
+        </h2>
+        <a href="/lecturer/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted mb-0">
+        Berikan nilai dan feedback untuk tugas mahasiswa yang belum dinilai.
+    </p>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">📝 Tugas yang Perlu Dinilai</h5>
+    </div>
+    <div class="card-body">
+        <% if (submissions && submissions.length) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Mahasiswa</th>
+                            <th>Tugas</th>
+                            <th>Tanggal Submit</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% submissions.forEach(function(s) { %>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>
+                                            <%= s.student_name %>
+                                        </strong><br>
+                                        <small class="text-muted">
+                                            <%= s.student_email %>
+                                        </small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <%= s.activity_title %>
+                                </td>
+                                <td>
+                                    <small>
+                                        <%= new Date(s.submitted_at).toLocaleDateString('id-ID') %>
+                                    </small>
+                                </td>
+                                <td>
+                                    <a href="/lecturer/assessments/<%= s.id %>/grade" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-pencil-square"></i> Beri Nilai
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-success mb-0">
+                    <i class="bi bi-check-circle"></i> Semua tugas sudah dinilai! 🎉
+                </div>
+                <% } %>
+    </div>
+</div>

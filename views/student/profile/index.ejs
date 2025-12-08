@@ -1,0 +1,212 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            👤 Profil Saya
+        </h2>
+        <a href="/student/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted mb-0">
+        Kelola informasi akun dan keamanan login Anda.
+    </p>
+</div>
+
+<div class="row g-4">
+    <!-- Informasi Profil -->
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">Informasi Profil</h5>
+            </div>
+            <div class="card-body">
+                <% if (typeof success !=='undefined' && success) { %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle"></i>
+                        <%= success %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <% } %>
+
+                        <% if (typeof error !=='undefined' && error) { %>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <%= error %>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            <% } %>
+
+                                <form method="POST" action="/student/profile">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Nama Lengkap</label>
+                                        <input type="text" class="form-control" id="name" name="name"
+                                            value="<%= currentUser.name %>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            value="<%= currentUser.email %>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="institution" class="form-label">Institusi</label>
+                                        <input type="text" class="form-control" id="institution" name="institution"
+                                            value="<%= currentUser.institution || '' %>">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="semester" class="form-label">Semester</label>
+                                        <input type="number" class="form-control" id="semester" name="semester"
+                                            value="<%= currentUser.semester || '' %>" min="1" max="14">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-save"></i> Simpan Perubahan
+                                    </button>
+                                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kartu Info Akun dengan Foto Profil -->
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm mb-3"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-body text-white">
+                <div class="text-center mb-3">
+                    <div class="position-relative d-inline-block">
+                        <% if (currentUser.profile_photo) { %>
+                            <img src="<%= currentUser.profile_photo %>" alt="Profile Photo" class="rounded-circle"
+                                style="width: 120px; height: 120px; object-fit: cover; border: 4px solid white;"
+                                id="profileImage">
+                            <% } else { %>
+                                <div class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center"
+                                    style="width: 120px; height: 120px; border: 4px solid white;"
+                                    id="profilePlaceholder">
+                                    <i class="bi bi-person-circle" style="font-size: 4rem; color: #667eea;"></i>
+                                </div>
+                                <% } %>
+                                    <button type="button"
+                                        class="btn btn-warning rounded-circle position-absolute shadow-sm"
+                                        style="bottom: 5px; right: 5px; width: 40px; height: 40px; padding: 0; border: 3px solid white;"
+                                        onclick="document.getElementById('photoInput').click()"
+                                        title="Klik untuk upload foto profil">
+                                        <i class="bi bi-camera-fill" style="font-size: 1.2rem;"></i>
+                                    </button>
+                    </div>
+                    <p class="text-white-50 small mt-2 mb-0">
+                        <i class="bi bi-info-circle"></i> Klik icon kamera untuk upload foto
+                    </p>
+                </div>
+                <h5 class="text-center text-white mb-1">
+                    <%= currentUser.name %>
+                </h5>
+                <p class="text-center text-white-50 small mb-0">
+                    <%= currentUser.email %>
+                </p>
+            </div>
+        </div>
+
+        <!-- Form Upload Foto (Hidden) -->
+        <form method="POST" action="/student/profile/upload-photo" enctype="multipart/form-data" id="photoForm">
+            <input type="file" id="photoInput" name="profile_photo" accept="image/*" style="display: none;"
+                onchange="previewAndSubmit(this)">
+        </form>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold">Informasi Akun</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <small class="text-muted">Role:</small><br>
+                    <span class="badge bg-primary">Mahasiswa</span>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">Status:</small><br>
+                    <span class="badge bg-success">Aktif</span>
+                </div>
+                <div>
+                    <small class="text-muted">Bergabung:</small><br>
+                    <small>
+                        <%= currentUser.created_at ? new Date(currentUser.created_at).toLocaleDateString('id-ID') : '-'
+                            %>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ubah Password -->
+<div class="card border-0 shadow-sm mt-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">🔒 Ubah Password</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="/student/profile/change-password">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="currentPassword" class="form-label">Password Lama</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="newPassword" class="form-label">Password Baru</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="confirmPassword" class="form-label">Konfirmasi Password Baru</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-warning">
+                <i class="bi bi-key"></i> Ubah Password
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewAndSubmit(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+
+            // Validasi ukuran file (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran file terlalu besar! Maksimal 5MB.');
+                input.value = '';
+                return;
+            }
+
+            // Validasi tipe file
+            if (!file.type.match('image.*')) {
+                alert('Hanya file gambar yang diperbolehkan!');
+                input.value = '';
+                return;
+            }
+
+            // Preview gambar
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgElement = document.getElementById('profileImage');
+                const placeholder = document.getElementById('profilePlaceholder');
+
+                if (imgElement) {
+                    imgElement.src = e.target.result;
+                } else if (placeholder) {
+                    placeholder.outerHTML = '<img src="' + e.target.result + '" alt="Profile Photo" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid white;" id="profileImage">';
+                }
+            };
+            reader.readAsDataURL(file);
+
+            // Submit form
+            document.getElementById('photoForm').submit();
+        }
+    }
+</script>

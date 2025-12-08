@@ -1,0 +1,65 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            📚 Manajemen Modul Pembelajaran
+        </h2>
+        <a href="/lecturer/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted mb-0">
+        Kelola modul pembelajaran PAI yang tersedia untuk mahasiswa.
+    </p>
+</div>
+
+<div class="row g-3">
+    <% if (modules && modules.length) { %>
+        <% modules.forEach(function(m) { %>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0 hover-lift">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="p-2 rounded"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="bi bi-book text-white fs-4"></i>
+                            </div>
+                            <h5 class="ms-3 mb-0 fw-bold">
+                                <%= m.title %>
+                            </h5>
+                        </div>
+                        <p class="card-text text-muted mb-3">
+                            <%= m.description || 'Tidak ada deskripsi' %>
+                        </p>
+                        <div class="mt-auto">
+                            <a href="/lecturer/modules/<%= m.id %>" class="btn btn-primary btn-sm w-100 mb-2">
+                                <i class="bi bi-eye"></i> Lihat Detail
+                            </a>
+                            <span class="badge <%= m.is_active ? 'bg-success' : 'bg-secondary' %>">
+                                <%= m.is_active ? 'Aktif' : 'Tidak Aktif' %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+                <% } else { %>
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Belum ada modul yang tersedia.
+                        </div>
+                    </div>
+                    <% } %>
+</div>
+
+<style>
+    .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>

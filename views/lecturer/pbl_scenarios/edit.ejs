@@ -1,0 +1,52 @@
+<!-- Header -->
+<div class="mb-4">
+    <h2 class="fw-bold">Edit Skenario PBL</h2>
+    <p class="text-muted">Perbarui skenario pembelajaran berbasis masalah.</p>
+</div>
+
+<% if (error) { %>
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i>
+        <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <% } %>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="POST" action="/lecturer/pbl-scenarios/<%= scenario.id %>?_method=PUT">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Judul Skenario *</label>
+                        <input type="text" class="form-control" id="title" name="title" value="<%= scenario.title %>"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Deskripsi</label>
+                        <textarea class="form-control" id="description" name="description"
+                            rows="3"><%= scenario.description || '' %></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="learning_objectives" class="form-label">Tujuan Pembelajaran</label>
+                        <textarea class="form-control" id="learning_objectives" name="learning_objectives"
+                            rows="3"><%= scenario.learning_objectives || '' %></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="problem_statement" class="form-label">Pernyataan Masalah *</label>
+                        <textarea class="form-control" id="problem_statement" name="problem_statement" rows="5"
+                            required><%= scenario.problem_statement %></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Simpan Perubahan
+                        </button>
+                        <a href="/lecturer/pbl-scenarios" class="btn btn-outline-secondary">
+                            <i class="bi bi-x"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>

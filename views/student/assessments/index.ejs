@@ -1,0 +1,133 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"
+            style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            📝 Penilaian & Tugas
+        </h2>
+        <a href="/student/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted mb-0">
+        Lihat nilai tugas dan feedback dari dosen, serta hasil kuis yang sudah dikerjakan.
+    </p>
+</div>
+
+<!-- Tugas yang Sudah Dinilai -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">📋 Tugas yang Sudah Dinilai</h5>
+    </div>
+    <div class="card-body">
+        <% if (taskSubmissions && taskSubmissions.length> 0) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Aktivitas</th>
+                            <th>Unit</th>
+                            <th>Modul</th>
+                            <th>Nilai</th>
+                            <th>Feedback</th>
+                            <th>Tanggal Dinilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% taskSubmissions.forEach(function(task) { %>
+                            <tr>
+                                <td><strong>
+                                        <%= task.activity_title || 'Tugas' %>
+                                    </strong></td>
+                                <td>
+                                    <%= task.unit_title || '-' %>
+                                </td>
+                                <td>
+                                    <%= task.module_title || '-' %>
+                                </td>
+                                <td>
+                                    <% if (task.score !==null) { %>
+                                        <span
+                                            class="badge bg-<%= task.score >= 75 ? 'success' : task.score >= 60 ? 'warning' : 'danger' %>">
+                                            <%= task.score %> / <%= task.max_score || 100 %>
+                                        </span>
+                                        <% } else { %>
+                                            <span class="badge bg-secondary">Belum Dinilai</span>
+                                            <% } %>
+                                </td>
+                                <td><small>
+                                        <%= task.feedback || 'Belum ada feedback' %>
+                                    </small></td>
+                                <td><small class="text-muted">
+                                        <%= task.graded_at ? new Date(task.graded_at).toLocaleDateString('id-ID') : '-'
+                                            %>
+                                    </small></td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> Belum ada tugas yang dinilai.
+                </div>
+                <% } %>
+    </div>
+</div>
+
+<!-- Hasil Kuis -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">🎯 Hasil Kuis</h5>
+    </div>
+    <div class="card-body">
+        <% if (quizAttempts && quizAttempts.length> 0) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Kuis</th>
+                            <th>Unit</th>
+                            <th>Modul</th>
+                            <th>Skor</th>
+                            <th>Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% quizAttempts.forEach(function(quiz) { %>
+                            <tr>
+                                <td><strong>
+                                        <%= quiz.activity_title || 'Kuis' %>
+                                    </strong></td>
+                                <td>
+                                    <%= quiz.unit_title || '-' %>
+                                </td>
+                                <td>
+                                    <%= quiz.module_title || '-' %>
+                                </td>
+                                <td>
+                                    <% if (quiz.score !==null) { %>
+                                        <span
+                                            class="badge bg-<%= quiz.score >= 75 ? 'success' : quiz.score >= 60 ? 'warning' : 'danger' %>">
+                                            <%= quiz.score %> / <%= quiz.max_score || 100 %>
+                                        </span>
+                                        <% } else { %>
+                                            <span class="badge bg-secondary">-</span>
+                                            <% } %>
+                                </td>
+                                <td><small class="text-muted">
+                                        <%= quiz.created_at ? new Date(quiz.created_at).toLocaleDateString('id-ID')
+                                            : '-' %>
+                                    </small></td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> Belum ada kuis yang dikerjakan.
+                </div>
+                <% } %>
+    </div>
+</div>

@@ -1,0 +1,132 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            📊 Laporan & Analisis Kelas
+        </h2>
+        <a href="/lecturer/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted mb-0">
+        Lihat statistik dan progres pembelajaran mahasiswa.
+    </p>
+</div>
+
+<!-- Statistik Kelas -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="mb-2">
+                    <i class="bi bi-people-fill text-primary" style="font-size: 2rem;"></i>
+                </div>
+                <h3 class="fw-bold mb-0">
+                    <%= stats.totalStudents %>
+                </h3>
+                <small class="text-muted">Total Mahasiswa</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="mb-2">
+                    <i class="bi bi-clipboard-check text-success" style="font-size: 2rem;"></i>
+                </div>
+                <h3 class="fw-bold mb-0">
+                    <%= stats.totalActivities %>
+                </h3>
+                <small class="text-muted">Total Aktivitas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="mb-2">
+                    <i class="bi bi-file-earmark-text text-info" style="font-size: 2rem;"></i>
+                </div>
+                <h3 class="fw-bold mb-0">
+                    <%= stats.totalSubmissions %>
+                </h3>
+                <small class="text-muted">Total Pengumpulan</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="mb-2">
+                    <i class="bi bi-star-fill text-warning" style="font-size: 2rem;"></i>
+                </div>
+                <h3 class="fw-bold mb-0">
+                    <%= stats.avgScore.toFixed(1) %>
+                </h3>
+                <small class="text-muted">Rata-rata Nilai</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progres Mahasiswa -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">📈 Progres Mahasiswa</h5>
+    </div>
+    <div class="card-body">
+        <% if (studentProgress && studentProgress.length) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nama Mahasiswa</th>
+                            <th>Email</th>
+                            <th>Tugas Selesai</th>
+                            <th>Rata-rata Nilai</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% studentProgress.forEach(function(s) { %>
+                            <tr>
+                                <td><strong>
+                                        <%= s.name %>
+                                    </strong></td>
+                                <td>
+                                    <%= s.email %>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        <%= s.completed_tasks || 0 %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <% if (s.avg_score) { %>
+                                        <span class="badge <%= s.avg_score>= 75 ? 'bg-success' : s.avg_score>= 60 ?
+                                            'bg-warning' : 'bg-danger' %>">
+                                            <%= s.avg_score.toFixed(1) %>
+                                        </span>
+                                        <% } else { %>
+                                            <span class="text-muted">-</span>
+                                            <% } %>
+                                </td>
+                                <td>
+                                    <a href="/lecturer/reports/student/<%= s.id || '#' %>"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Detail
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> Belum ada data progres mahasiswa.
+                </div>
+                <% } %>
+    </div>
+</div>

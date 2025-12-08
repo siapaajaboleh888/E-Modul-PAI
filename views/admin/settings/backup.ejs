@@ -1,0 +1,54 @@
+<h2 class="mb-4">💾 Backup Database</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">Backup Database</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    Backup database akan membuat salinan dari semua data di database saat ini.
+                    Proses ini mungkin memakan waktu beberapa menit tergantung ukuran database.
+                </p>
+
+                <div class="alert alert-info">
+                    <strong>Catatan:</strong> Fitur backup database memerlukan konfigurasi tambahan di server.
+                    Untuk saat ini, Anda dapat melakukan backup manual menggunakan tools seperti TablePlus atau MySQL
+                    Workbench.
+                </div>
+
+                <h6 class="mt-4">Cara Backup Manual:</h6>
+                <ol>
+                    <li>Buka TablePlus atau MySQL Workbench</li>
+                    <li>Connect ke database <code>emodul_pai</code></li>
+                    <li>Klik menu <strong>Backup</strong> atau <strong>Export</strong></li>
+                    <li>Pilih format SQL dan simpan file backup</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">📊 Info Database</h5>
+                <ul class="list-unstyled">
+                    <li><strong>Database:</strong> emodul_pai</li>
+                    <li><strong>Total Tabel:</strong> 15</li>
+                    <li><strong>Status:</strong> <span class="badge bg-success">Active</span></li>
+                </ul>
+
+                <hr>
+
+                <p class="text-muted small">
+                    Disarankan untuk melakukan backup secara berkala (minimal 1x seminggu)
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="/admin/settings" class="btn btn-secondary">Kembali ke Pengaturan</a>
+</div>

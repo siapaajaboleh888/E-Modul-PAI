@@ -1,0 +1,71 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            👥 Manajemen Mahasiswa
+        </h2>
+        <a href="/lecturer/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+    <p class="text-muted mb-0">
+        Lihat daftar mahasiswa yang terdaftar di sistem.
+    </p>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0 fw-bold">📋 Daftar Mahasiswa</h5>
+    </div>
+    <div class="card-body">
+        <% if (students && students.length) { %>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Institusi</th>
+                            <th>Semester</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% students.forEach(function(s) { %>
+                            <tr>
+                                <td><strong>
+                                        <%= s.name %>
+                                    </strong></td>
+                                <td>
+                                    <%= s.email %>
+                                </td>
+                                <td>
+                                    <%= s.institution || '-' %>
+                                </td>
+                                <td>
+                                    <%= s.semester || '-' %>
+                                </td>
+                                <td>
+                                    <span class="badge <%= s.status==='ACTIVE' ? 'bg-success' : 'bg-secondary' %>">
+                                        <%= s.status %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/lecturer/users/<%= s.id %>" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Detail
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle"></i> Belum ada mahasiswa yang terdaftar.
+                </div>
+                <% } %>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+<!-- Header -->
+<div class="mb-4">
+    <h2 class="fw-bold">Beri Nilai Tugas</h2>
+    <p class="text-muted">Berikan nilai dan feedback untuk tugas mahasiswa.</p>
+</div>
+
+<% if (error) { %>
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i>
+        <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <% } %>
+
+        <div class="row g-4">
+            <!-- Informasi Mahasiswa & Tugas -->
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-header bg-primary bg-opacity-10">
+                        <h5 class="mb-0 fw-bold">📄 Jawaban Mahasiswa</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Tugas:</strong>
+                            <%= submission.activity_title %>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Jawaban:</strong>
+                            <div class="border rounded p-3 bg-light mt-2">
+                                <%= submission.answer_text %>
+                            </div>
+                        </div>
+                        <% if (submission.attachment_url) { %>
+                            <div class="mb-3">
+                                <strong>Lampiran:</strong><br>
+                                <a href="<%= submission.attachment_url %>" target="_blank"
+                                    class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-paperclip"></i> Lihat Lampiran
+                                </a>
+                            </div>
+                            <% } %>
+                    </div>
+                </div>
+
+                <!-- Form Penilaian -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0 fw-bold">✍️ Berikan Penilaian</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/lecturer/assessments/<%= submission.id %>/grade">
+                            <div class="mb-3">
+                                <label for="score" class="form-label">Nilai *</label>
+                                <input type="number" class="form-control" id="score" name="score" min="0"
+                                    max="<%= submission.max_score || 100 %>" required>
+                                <small class="text-muted">Maksimal: <%= submission.max_score || 100 %></small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="feedback" class="form-label">Feedback *</label>
+                                <textarea class="form-control" id="feedback" name="feedback" rows="5" required
+                                    placeholder="Berikan feedback konstruktif untuk mahasiswa..."></textarea>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Simpan Penilaian
+                                </button>
+                                <a href="/lecturer/assessments" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x"></i> Batal
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Mahasiswa -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0 fw-bold">👤 Informasi Mahasiswa</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <small class="text-muted">Nama:</small><br>
+                            <strong>
+                                <%= submission.student_name %>
+                            </strong>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">Email:</small><br>
+                            <%= submission.student_email %>
+                        </div>
+                        <div>
+                            <small class="text-muted">Tanggal Submit:</small><br>
+                            <%= new Date(submission.submitted_at).toLocaleDateString('id-ID', { weekday: 'long' ,
+                                year: 'numeric' , month: 'long' , day: 'numeric' }) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

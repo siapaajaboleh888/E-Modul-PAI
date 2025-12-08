@@ -1,0 +1,83 @@
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>⭐ Manajemen Nilai Transformatif</h2>
+        <a href="/admin/transformative-values/new" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Tambah Nilai Baru
+        </a>
+    </div>
+
+    <% if (values && values.length> 0) { %>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Nilai</th>
+                        <th>Deskripsi</th>
+                        <th>Indikator</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% values.forEach(function(value, index) { %>
+                        <tr>
+                            <td>
+                                <%= index + 1 %>
+                            </td>
+                            <td><strong>
+                                    <%= value.value_name %>
+                                </strong></td>
+                            <td>
+                                <%= value.description || '-' %>
+                            </td>
+                            <td>
+                                <% if (value.indicators) { %>
+                                    <small class="text-muted">
+                                        <%= value.indicators.substring(0, 100) %>...
+                                    </small>
+                                    <% } else { %>
+                                        <small class="text-muted">-</small>
+                                        <% } %>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="/admin/transformative-values/<%= value.id %>/edit"
+                                        class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <form method="POST"
+                                        action="/admin/transformative-values/<%= value.id %>?_method=DELETE"
+                                        class="d-inline" onsubmit="return confirm('Yakin ingin menghapus nilai ini?')">
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <% } else { %>
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Belum ada nilai transformatif.
+                <a href="/admin/transformative-values/new" class="alert-link">Tambah nilai pertama</a>
+            </div>
+            <% } %>
+
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a href="/admin/dashboard" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+                            </a>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <a href="/admin/transformative-values/assessments" class="btn btn-outline-primary">
+                                <i class="bi bi-clipboard-check"></i> Lihat Penilaian Mahasiswa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+</div>

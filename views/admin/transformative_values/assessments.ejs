@@ -1,0 +1,142 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <h2 class="fw-bold mb-2"
+        style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+        ⭐ Penilaian Nilai Transformatif Mahasiswa
+    </h2>
+    <p class="text-muted">Pilih mahasiswa untuk memberikan penilaian nilai transformatif (Toleransi, Moderasi, dll)</p>
+</div>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin/transformative-values">Nilai Transformatif</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Penilaian Mahasiswa</li>
+    </ol>
+</nav>
+
+<!-- Filter dan Back Button -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <input type="text" id="searchStudent" class="form-control" placeholder="🔍 Cari nama mahasiswa...">
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/admin/dashboard" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Info -->
+<% if (values && values.length===0) { %>
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>Nilai transformatif belum didefinisikan.</strong> Silakan <a
+            href="/admin/transformative-values">tambahkan nilai transformatif</a> terlebih dahulu.
+    </div>
+    <% } %>
+
+        <!-- Daftar Mahasiswa -->
+        <% if (students && students.length> 0) { %>
+            <div class="row g-3">
+                <% students.forEach((student, index)=> { %>
+                    <div class="col-md-6 col-lg-4 student-item">
+                        <div class="card border-0 shadow-sm h-100 hover-lift">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="p-3 rounded-circle me-3"
+                                        style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                                        <i class="bi bi-person-fill text-white fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h5 class="fw-bold mb-1">
+                                            <%= student.name %>
+                                        </h5>
+                                        <small class="text-muted">
+                                            <%= student.email %>
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between small">
+                                        <span class="text-muted">
+                                            <i class="bi bi-building"></i>
+                                            <%= student.institution || '-' %>
+                                        </span>
+                                        <span class="badge bg-info">
+                                            Semester <%= student.semester || '-' %>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <hr class="my-3">
+
+                                <a href="/admin/transformative-values/assessments/<%= student.id %>"
+                                    class="btn btn-sm btn-success w-100">
+                                    <i class="bi bi-pencil-square"></i> Beri Penilaian
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+            <% } else { %>
+                <div class="text-center py-5">
+                    <div class="p-4 rounded-circle bg-light d-inline-flex mb-3">
+                        <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                    <p class="text-muted">Belum ada mahasiswa yang terdaftar.</p>
+                    <a href="/admin/users/new" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Tambah Mahasiswa
+                    </a>
+                </div>
+                <% } %>
+
+                    <style>
+                        .hover-lift {
+                            transition: transform 0.3s ease, box-shadow 0.3s ease;
+                        }
+
+                        .hover-lift:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+                        }
+
+                        .card {
+                            border-radius: 12px;
+                        }
+
+                        .btn-success {
+                            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+                            border: none;
+                        }
+
+                        .btn-success:hover {
+                            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4);
+                        }
+                    </style>
+
+                    <script>
+                        // Search functionality
+                        document.getElementById('searchStudent').addEventListener('input', function (e) {
+                            const searchTerm = e.target.value.toLowerCase();
+                            const students = document.querySelectorAll('.student-item');
+
+                            students.forEach(student => {
+                                const text = student.textContent.toLowerCase();
+                                if (text.includes(searchTerm)) {
+                                    student.style.display = '';
+                                } else {
+                                    student.style.display = 'none';
+                                }
+                            });
+                        });
+                    </script>

@@ -1,6 +1,38 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../services/db-mysql');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Konfigurasi multer untuk upload foto profil
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, '../../public/uploads/profiles');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'profile-' + req.session.user.id + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+  fileFilter: function (req, file, cb) {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb(new Error('Hanya file gambar (JPEG, PNG, GIF) yang diperbolehkan!'));
+  }
+});
 
 function requireStudent(req, res, next) {
   if (!req.session.user || req.session.user.role !== 'STUDENT') {
@@ -34,12 +66,127 @@ router.get('/activities/overview', (req, res) => {
 
 // Halaman Glosarium (masih statis sederhana)
 router.get('/glossary', (req, res) => {
-  res.render('student/glossary');
+  res.render('student/glossary/index');
 });
 
-// Halaman Pengaturan / Profil (placeholder)
+// ========== MEDIA DIGITAL ==========
+// Halaman untuk melihat semua media digital
+router.get('/media', async (req, res) => {
+  try {
+    const media = await db.query('SELECT * FROM digital_media ORDER BY uploaded_at DESC');
+    res.render('student/media/index', { media });
+  } catch (err) {
+    console.error('Get media error:', err);
+    res.redirect('/student/dashboard');
+  }
+});
+
+// Detail media
+router.get('/media/:id', async (req, res) => {
+  try {
+    const mediaId = req.params.id;
+    const media = await db.queryOne('SELECT * FROM digital_media WHERE id = ?', [mediaId]);
+    if (!media) {
+      return res.redirect('/student/media');
+    }
+    res.render('student/media/show', { media });
+  } catch (err) {
+    console.error('Get media detail error:', err);
+    res.redirect('/student/media');
+  }
+});
+
+// Halaman Pengaturan / Profil
 router.get('/profile', (req, res) => {
-  res.render('student/profile');
+  const success = req.query.success || undefined;
+  const error = req.query.error || undefined;
+  res.render('student/profile/index', { success, error });
+});
+
+// Update profil mahasiswa
+router.post('/profile', async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { name, email, institution, semester } = req.body;
+
+    await db.query(
+      'UPDATE users SET name = ?, email = ?, institution = ?, semester = ? WHERE id = ?',
+      [name, email, institution || null, semester || null, userId]
+    );
+
+    // Update session
+    req.session.user.name = name;
+    req.session.user.email = email;
+    req.session.user.institution = institution;
+    req.session.user.semester = semester;
+
+    res.render('student/profile/index', { success: 'Profil berhasil diperbarui!' });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.render('student/profile/index', { error: 'Gagal memperbarui profil.' });
+  }
+});
+
+// Upload foto profil
+router.post('/profile/upload-photo', upload.single('profile_photo'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.redirect('/student/profile?error=' + encodeURIComponent('Tidak ada file yang diupload.'));
+    }
+
+    const userId = req.session.user.id;
+    const photoPath = '/uploads/profiles/' + req.file.filename;
+
+    // Hapus foto lama jika ada
+    const oldUser = await db.queryOne('SELECT profile_photo FROM users WHERE id = ?', [userId]);
+    if (oldUser && oldUser.profile_photo) {
+      const oldPhotoPath = path.join(__dirname, '../../public', oldUser.profile_photo);
+      if (fs.existsSync(oldPhotoPath)) {
+        fs.unlinkSync(oldPhotoPath);
+      }
+    }
+
+    // Update database
+    await db.query('UPDATE users SET profile_photo = ? WHERE id = ?', [photoPath, userId]);
+
+    // Update session
+    req.session.user.profile_photo = photoPath;
+
+    res.redirect('/student/profile?success=' + encodeURIComponent('Foto profil berhasil diperbarui!'));
+  } catch (error) {
+    console.error('Error uploading photo:', error);
+    res.redirect('/student/profile?error=' + encodeURIComponent('Gagal mengupload foto profil: ' + error.message));
+  }
+});
+
+// Ubah password
+router.post('/profile/change-password', async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      return res.redirect('/student/profile?error=' + encodeURIComponent('Password baru dan konfirmasi tidak cocok.'));
+    }
+
+    // Verifikasi password lama
+    const user = await db.queryOne('SELECT password_hash FROM users WHERE id = ?', [userId]);
+    const bcrypt = require('bcryptjs');
+    const isValid = await bcrypt.compare(currentPassword, user.password_hash);
+
+    if (!isValid) {
+      return res.redirect('/student/profile?error=' + encodeURIComponent('Password lama tidak sesuai.'));
+    }
+
+    // Hash password baru
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await db.query('UPDATE users SET password_hash = ? WHERE id = ?', [hashedPassword, userId]);
+
+    res.redirect('/student/profile?success=' + encodeURIComponent('Password berhasil diubah!'));
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.redirect('/student/profile?error=' + encodeURIComponent('Gagal mengubah password: ' + error.message));
+  }
 });
 
 router.get('/modules', async (req, res) => {
@@ -220,6 +367,107 @@ router.post('/activities/:id/task', async (req, res) => {
   res.render('student/activities/task_submitted', {
     activity,
     unit: unitRow
+  });
+});
+
+// ========== PENILAIAN REFLEKSI & TUGAS ==========
+router.get('/assessments', async (req, res) => {
+  const studentId = req.session.user.id;
+
+  // Ambil semua submission tugas dengan nilai
+  const taskSubmissions = await db.query(
+    `SELECT ts.*, a.title as activity_title, a.max_score, u.title as unit_title, m.title as module_title
+     FROM task_submissions ts
+     JOIN activities a ON ts.activity_id = a.id
+     JOIN units u ON a.unit_id = u.id
+     JOIN modules m ON u.module_id = m.id
+     WHERE ts.student_id = ?
+     ORDER BY ts.submitted_at DESC`,
+    [studentId]
+  );
+
+  // Ambil semua quiz attempts dengan nilai
+  const quizAttempts = await db.query(
+    `SELECT aa.*, a.title as activity_title, a.max_score, u.title as unit_title, m.title as module_title
+     FROM activity_attempts aa
+     JOIN activities a ON aa.activity_id = a.id
+     JOIN units u ON a.unit_id = u.id
+     JOIN modules m ON u.module_id = m.id
+     WHERE aa.student_id = ?
+     ORDER BY aa.submitted_at DESC`,
+    [studentId]
+  );
+
+  res.render('student/assessments/index', { taskSubmissions, quizAttempts });
+});
+
+// ========== LAPORAN AKHIR PROGRES ==========
+router.get('/progress-report', async (req, res) => {
+  const studentId = req.session.user.id;
+
+  // Statistik keseluruhan
+  const totalModules = await db.queryOne('SELECT COUNT(*) as count FROM modules WHERE is_active = 1');
+  const completedModules = await db.queryOne(
+    `SELECT COUNT(DISTINCT m.id) as count 
+     FROM modules m
+     JOIN units u ON m.id = u.module_id
+     JOIN student_progress sp ON u.id = sp.unit_id
+     WHERE sp.student_id = ? AND sp.status = 'COMPLETED'`,
+    [studentId]
+  );
+
+  const totalActivities = await db.queryOne('SELECT COUNT(*) as count FROM activities');
+  const completedActivities = await db.queryOne(
+    `SELECT COUNT(DISTINCT activity_id) as count 
+     FROM (
+       SELECT activity_id FROM task_submissions WHERE student_id = ?
+       UNION
+       SELECT activity_id FROM activity_attempts WHERE student_id = ?
+     ) as completed`,
+    [studentId, studentId]
+  );
+
+  // Rata-rata nilai
+  const avgTaskScore = await db.queryOne(
+    'SELECT AVG(score) as avg FROM task_submissions WHERE student_id = ? AND score IS NOT NULL',
+    [studentId]
+  );
+  const avgQuizScore = await db.queryOne(
+    'SELECT AVG(score) as avg FROM activity_attempts WHERE student_id = ?',
+    [studentId]
+  );
+
+  // Progres per modul
+  const moduleProgress = await db.query(
+    `SELECT m.title as module_title, 
+     COUNT(DISTINCT u.id) as total_units,
+     COUNT(DISTINCT CASE WHEN sp.status = 'COMPLETED' THEN sp.unit_id END) as completed_units
+     FROM modules m
+     LEFT JOIN units u ON m.id = u.module_id
+     LEFT JOIN student_progress sp ON u.id = sp.unit_id AND sp.student_id = ?
+     WHERE m.is_active = 1
+     GROUP BY m.id
+     ORDER BY m.ordering`,
+    [studentId]
+  );
+
+  // Ambil progres detail per unit
+  const progress = await db.query(
+    'SELECT * FROM student_progress WHERE student_id = ? ORDER BY unit_id',
+    [studentId]
+  );
+
+  res.render('student/progress_report/index', {
+    stats: {
+      totalModules: totalModules.count,
+      completedModules: completedModules.count || 0,
+      totalActivities: totalActivities.count,
+      completedActivities: completedActivities.count || 0,
+      avgTaskScore: avgTaskScore.avg || 0,
+      avgQuizScore: avgQuizScore.avg || 0
+    },
+    moduleProgress,
+    progress
   });
 });
 

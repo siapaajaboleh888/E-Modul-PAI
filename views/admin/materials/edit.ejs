@@ -1,0 +1,156 @@
+<!-- Header dengan Gradient -->
+<div class="mb-4">
+    <h2 class="fw-bold mb-2"
+        style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+        ✏️ Edit Materi
+    </h2>
+    <p class="text-muted">Perbarui informasi materi pembelajaran</p>
+</div>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin/materials">Materi</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    </ol>
+</nav>
+
+<!-- Tombol Navigasi -->
+<div class="mb-3 d-flex justify-content-between align-items-center">
+    <div></div>
+    <div class="d-flex gap-2">
+        <a href="/admin/materials" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Kembali ke Daftar Materi
+        </a>
+        <a href="/admin/dashboard" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-house"></i> Dashboard
+        </a>
+    </div>
+</div>
+
+<% if (error) { %>
+    <div class="alert alert-danger">
+        <%= error %>
+    </div>
+    <% } %>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="POST" action="/admin/units/<%= unit.id %>/materials/<%= material.id %>?_method=PUT">
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label fw-bold">Judul Materi <span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" value="<%= material.title %>"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="content" class="form-label fw-bold">Konten Materi</label>
+                        <textarea class="form-control" id="content" name="content"
+                            rows="8"><%= material.content || '' %></textarea>
+                        <small class="text-muted">Isi dengan konten pembelajaran lengkap</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="media_type" class="form-label fw-bold">Tipe Media</label>
+                        <select class="form-select" id="media_type" name="media_type">
+                            <option value="">-- Tidak Ada Media --</option>
+                            <option value="TEXT" <%=material.media_type==='TEXT' ? 'selected' : '' %>>TEXT</option>
+                            <option value="VIDEO" <%=material.media_type==='VIDEO' ? 'selected' : '' %>>VIDEO</option>
+                            <option value="AUDIO" <%=material.media_type==='AUDIO' ? 'selected' : '' %>>AUDIO</option>
+                            <option value="IMAGE" <%=material.media_type==='IMAGE' ? 'selected' : '' %>>IMAGE</option>
+                            <option value="DOCUMENT" <%=material.media_type==='DOCUMENT' ? 'selected' : '' %>>DOCUMENT
+                            </option>
+                            <option value="ANIMATION" <%=material.media_type==='ANIMATION' ? 'selected' : '' %>
+                                >ANIMATION</option>
+                        </select>
+                    </div>
+
+                    <!-- Pilihan Upload Method -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Metode Upload Media</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="upload_method" id="method_url" value="url"
+                                checked>
+                            <label class="btn btn-outline-primary" for="method_url">
+                                <i class="bi bi-link-45deg"></i> URL/Link
+                            </label>
+
+                            <input type="radio" class="btn-check" name="upload_method" id="method_file" value="file">
+                            <label class="btn btn-outline-primary" for="method_file">
+                                <i class="bi bi-file-earmark-arrow-up"></i> Upload File
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div class="mb-3" id="url_input">
+                        <label for="media_url" class="form-label fw-bold">URL Media</label>
+                        <input type="text" class="form-control" id="media_url" name="media_url"
+                            value="<%= material.media_url || '' %>">
+                        <small class="text-muted">Contoh: https://www.youtube.com/embed/abc123 atau URL lainnya</small>
+                    </div>
+
+                    <!-- File Upload (Hidden by default) -->
+                    <div class="mb-3 d-none" id="file_input">
+                        <label for="media_file" class="form-label fw-bold">Upload File Media</label>
+                        <input type="file" class="form-control" id="media_file" name="media_file" accept="*/*">
+                        <small class="text-muted">Upload file dari komputer Anda (Max 50MB)</small>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Simpan Perubahan
+                        </button>
+                        <a href="/admin/materials" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            // Toggle between URL and File upload
+            document.querySelectorAll('input[name="upload_method"]').forEach((radio) => {
+                radio.addEventListener('change', function () {
+                    const urlInput = document.getElementById('url_input');
+                    const fileInput = document.getElementById('file_input');
+
+                    if (this.value === 'url') {
+                        urlInput.classList.remove('d-none');
+                        fileInput.classList.add('d-none');
+                        document.getElementById('media_file').value = '';
+                    } else {
+                        urlInput.classList.add('d-none');
+                        fileInput.classList.remove('d-none');
+                        document.getElementById('media_url').value = '';
+                    }
+                });
+            });
+        </script>
+
+        <style>
+            .card {
+                border-radius: 12px;
+            }
+
+            .form-label {
+                color: #2d3748;
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+            }
+
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            }
+        </style>
